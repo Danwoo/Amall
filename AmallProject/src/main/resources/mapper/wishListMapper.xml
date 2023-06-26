@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.amall.wishlist.mapper.WishListMapper">	<!-- xml파일을 사용할 mapper가 있는 경로 -->
+
+	<!-- INSERT문 -->
+	<insert id="addWishList" parameterType="project.amall.wishlist.dto.WishListDto">
+		<![CDATA[
+			INSERT INTO WISHLIST
+			(	
+				WISHLIST_ID,
+				WISHLIST_REGDATE,
+				MEMBER_ID,
+				PROD_NUM
+			)
+			VALUES
+			(
+				#{wishlistId},
+				TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'),
+				#{memberId},
+				#{prodNum}
+			)
+		]]>
+	</insert>
+	
+	<!-- SELECT문 -->
+	<select id="showThisIdWishList" parameterType="String" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT W.PROD_NUM,
+				   P.PROD_NAME,
+				   P.PROD_CODE,
+				   P.SELLER_ID,
+				   P.PROD_IMAGE1
+			FROM WISHLIST W
+			JOIN PRODUCT P
+			ON (W.PROD_NUM = P.PROD_NUM)
+			WHERE W.MEMBER_ID = #{memberId}
+			AND ROWNUM <= 4
+		]]>
+	</select>
+	
+	<!-- UPDATE문 -->
+	
+	<!-- DELETE문 -->
+	
+</mapper>

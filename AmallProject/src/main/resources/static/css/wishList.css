@@ -1,0 +1,104 @@
+#bodyContainer {
+	width: 960px;
+	margin: 20px auto;
+}
+#banner{
+	text-align : center;
+	padding : 35px;
+	background-color: #DAFFD4;
+	font-family: 'Varela Round', sans-serif;
+}
+.wishList{
+	margin : auto;
+	width : 960px;
+}
+#myWish, #yourWish{
+	width:auto;
+	display:inline-block;
+	text-align:left;
+	margin: 50px 0 0 25px;
+}
+.solo{
+	width:auto;
+	display:block;
+	text-align:center;
+	font-size: 44px;
+	font-family: 'NanumSquareAcr';
+	font-weight: 900;
+}
+.soloLink{
+	width:auto;
+	display:block;
+	text-align:center;
+	font-size: 30px;
+	font-family: 'NanumSquareAcr';
+	font-weight: 900;
+	cursor: pointer;
+}
+
+#solo>img {
+	width: 350px;
+	height: 250px;
+}
+
+.tabcontent{display:inline-block;}
+.showItem {
+	overflow: auto;
+	margin-top: 5px;
+	margin-left: 10px;
+	width:960px;
+}
+
+.itemInfor {
+	display: inline-block;
+	margin: 15px 14px;
+	border: 1px solid black;
+	border-radius: 5px;
+	width: 200px;
+}
+
+.itemImage>img {
+	border-radius: 5px;
+	width:198px;
+	height:200px;
+}
+
+.itemExplanation {
+	padding : 5px;
+	text-align : left;
+	margin-top:5px;
+	height: 45px;
+}
+.itemExplanation h5{
+	display:inline-block;
+	text-align: left;
+}
+.itemExplanation nav{
+	float:right;
+}
+
+.itemExplanation nav a{
+	border:0;
+	background-color: transparent;
+}
+
+.itemExplanation nav a:hover{
+	border:0;
+	background-color: transparent;
+}
+
+.itemExplanation nav a img{
+	width:20px;
+	height:20px;
+}
+.itemExplanation nav a img,img-hover{
+	width:20px;
+	height:20px;
+}
+.miniContainer {
+	margin: 5px auto 60px auto;
+}
+
+.miniContainer>div>h4 {
+	font-family: 'NanumSquareAcr';
+}

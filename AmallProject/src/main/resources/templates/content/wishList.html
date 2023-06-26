@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout/defaultLayout}"
+	layout:fragment="Content">
+<head>
+<title>WishList</title>
+
+<!-- inline CSS 영역-->
+<link th:inline="css" th:href="@{/css/wishList.css}" rel="stylesheet" />
+<style type="text/css">
+.content {
+	width: 960px;
+	margin: auto;
+}
+</style>
+
+<!-- inline JS 영역-->
+<!--script th:inline="javascript" type="text/javascript" th:src="@{/js/home.js}"/-->
+</head>
+
+<body>
+	<div layout:fragment="content" class="content">
+		<div class="container">
+			<div id="banner">
+				<h2>WishList</h2>
+			</div>
+			<div id="myWish">
+				<h3>나의 관심상품</h3>
+			</div>
+			<div class="tabcontent">
+				<div class="miniContainer">
+					<div class="showItem">
+						<div th:each="myWish : ${myWishList}" class="itemInfor">
+							<div class="itemImage">
+								<img th:src="${myWish.PROD_IMAGE1}">
+							</div>
+							<div class="itemExplanation">
+								<h6 th:text="${myWish.SELLER_ID}"></h6>
+								<h5 th:text="${myWish.PROD_NAME}"></h5>
+								<nav>
+								<a class="like"> <img src="img/imgCommon/Good.png">
+									</a>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div th:switch="${checkSolo}">
+				<div th:case="0" class="solo">저런... 아직도 솔로세요?</div>
+				<div th:case="1" class="solo">신발도 짝이 있는데...</div>
+				<div th:case="2" class="solo">호그와트 입학 준비중이세요?</div>
+				<div th:case="3" class="solo">저 근데... 모솔은... 아니죠?</div>
+				<div th:case="4" class="solo">풉!</div>
+				<div th:case="5" class="soloLink" onclick="window.open('https://www.netflix.com/kr/title/81436209')">https://www.netflix.com/kr/title/81436209</div>
+				<div th:case="6" class="solo">아자아자! 30년 할 수 있다!</div>
+				<div th:case="7" class="soloLink" onclick="window.open('https://www.youtube.com/watch?v=KJSXolyj4DM')">https://www.youtube.com/watch?v=KJSXolyj4DM</div>
+				<div th:case="8" class="solo"><img src="/img/imgCommon/solo1.png"></div>
+				<div th:case="9" class="solo">풉!</div>
+  			</div>
+			<div th:if="${checkCouple}" id="yourWish">
+				<h3>너의 관심상품</h3>
+			</div>
+			<div class="tabcontent">
+				<div class="miniContainer">
+					<div class="showItem">
+						<div th:each="yourWish : ${yourWishList}" class="itemInfor">
+							<div class="itemImage">
+								<img th:src="${yourWish.PROD_IMAGE1}">
+							</div>
+							<div class="itemExplanation">
+								<h6 th:text="${yourWish.SELLER_ID}"></h6>
+								<h5 th:text="${yourWish.PROD_NAME}"></h5>
+								<nav>
+								<a class="like"> <img src="img/imgCommon/Good.png">
+									</a>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

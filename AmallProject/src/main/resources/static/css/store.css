@@ -1,0 +1,112 @@
+#bodyContainer {
+	width: 960px;
+	margin: 20px auto;
+}
+#banner{
+	text-align : center;
+	padding : 35px;
+	background-color: #0000;
+	font-family: 'Varela Round', sans-serif;
+}
+
+/*Store tab*/
+.tab {
+  width: 100%;
+  height: 50px;
+  margin:20px 162px;
+  align-items: center;
+}
+
+.tablinks {
+  float: left;
+  width: auto;
+  margin-left : 120px;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tablinks:hover{
+  transition:0.3s;
+  transform: scale(1.1);
+}
+
+.tab .tablinks img{
+  height:100%;
+}
+.tabcontent{
+	display:inline-block;
+}
+
+.showItem {
+	overflow: auto;
+	margin-top: 25px;
+	margin-left: 10px;
+	width:960px;
+}
+
+.itemInfor {
+	display: inline-block;
+	margin: 15px 14px;
+	border: 1px solid black;
+	border-radius: 5px;
+	width: 200px;
+}
+
+.reviewShow {
+	width: 170px;
+	margin: 5px 10px;
+	height: 117px;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+.itemImage>img {
+	border-radius: 5px;
+	width:198px;
+	height:200px;
+}
+
+.itemExplanation {
+	padding : 5px;
+	text-align : left;
+	margin-top:5px;
+	height: 45px;
+}
+.itemExplanation h5{
+	display:inline-block;
+	text-align: left;
+}
+.itemExplanation nav{
+	float:right;
+	margin: 5px 5px 5px 0;
+}
+
+.itemExplanation nav a{
+	border:0;
+	background-color: transparent;
+}
+
+.itemExplanation nav a:hover{
+	border:0;
+	background-color: transparent;
+}
+
+.itemExplanation nav a img{
+	width:20px;
+	height:20px;
+}
+.itemExplanation nav a img,img-hover{
+	width:20px;
+	height:20px;
+}
+.miniContainer {
+	margin: 60px auto 60px auto;
+}
+
+.miniContainer>div>h4 {
+	font-family: 'NanumSquareAcr';
+}

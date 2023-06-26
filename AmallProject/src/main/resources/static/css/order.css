@@ -1,0 +1,169 @@
+#orderContainer {
+	margin: 0;
+	font-family: NanumSquareAcr;
+	width: 960px;
+	margin: 20px auto;
+}
+
+#orderNav {
+	background-color: white;
+	width: 65%;
+	float: left;
+}
+
+#aside {
+	background-color: #000;
+	width: 35%;
+	float: right;
+}
+
+#banner {
+	text-align: center;
+	padding: 35px;
+	background-color: withe;
+	font-family: 'Varela Round', sans-serif;
+}
+
+.pInOrderPage, .spanInOrderPage {
+	margin: 0;
+	text-align: center;
+}
+
+.aInOrderPage {
+	color: black;
+}
+
+.imgInOrderPage {
+	display: block;
+	width: 80%;
+	height: 80px;
+	margin: auto;
+}
+
+.order {
+	margin: auto;
+	padding: 30px;
+	font: sans-serif;
+}
+
+.sellTable {
+	width: 30%;
+	margin: 20px auto;
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color: lightgrey;
+}
+
+.orderInfo {
+	margin: 20px auto;
+	width: 90%;
+}
+
+.orderer {
+	margin: 20px auto;
+	width: 90%;
+}
+
+table {
+	border-top: solid 1.5px black;
+	border-collapse: collapse;
+	width: 90%;
+	font-size: 14px;
+}
+
+thead {
+	font: 'NanumSquareAcr';
+	font-size: 13px;
+	text-align: center;
+	font-weight: bold;
+}
+
+tbody {
+	font-size: 12px;
+}
+
+td {
+	padding: 15px 0px;
+	border-bottom: 1px solid lightgrey;
+}
+
+select {
+	width: 120px;
+	height: 30px;
+	font-family: inherit;
+	background:
+		url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg)
+		no-repeat 95% 50%;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border: 1px solid #999;
+	border-radius: 0px;
+}
+
+select::-ms-expand {
+	/* for IE 11 */
+	display: none;
+}
+
+.orderListdetail :nth-child(3) {
+	vertical-align: center;
+}
+
+.orderListdetail :nth-child(3) a {
+	font-size: 12px;
+}
+
+.orderListdetail :nth-child(3) p {
+	margin-top: 6px;
+	font-weight: bold;
+}
+
+.orderListsub {
+	vertical-align: top;
+	font-size: 12px;
+}
+
+.orderListsub :first-child {
+	width: 10%;
+}
+
+.orderListsub :last-child {
+	width: 10%;
+}
+
+.orderListsub :nth-child(2) {
+	text-align: left;
+}
+
+.orderListsub :nth-child(3) {
+	text-align: right;
+}
+
+.orderListSmartStore {
+	font-size: 12px;
+	color: gray;
+}
+
+.orderListdetail :nth-child(5), .orderListdetail :nth-child(6) {
+	text-align: center;
+}
+
+.orderListdetail :nth-child(5) button {
+	background-color: limegreen;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 4px 8px;
+	font-size: 12px;
+	margin-top: 5px;
+}
+
+.orderBigorderBtn.right {
+	width: 200px;
+	height: 50px;
+	background-color: #f247b8;
+	color: white;
+	border: none;
+	vertical-align: center;
+}

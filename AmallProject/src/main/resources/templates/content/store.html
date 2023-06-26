@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout/defaultLayout}"
+	layout:fragment="Content">
+<head>
+<title>Store</title>
+
+<!-- inline CSS 영역-->
+<link th:inline="css" th:href="@{/css/store.css}" rel="stylesheet" />
+<style type="text/css">
+.content {
+	width: 960px;
+	margin: auto;
+}
+a:link{
+    color:black;
+}
+
+a:visited{
+    color:black;
+    text-decoration: none;
+}
+a{text-decoration: none;}
+a:hover{color:lightpink;}
+a:active{color:lightpink;}
+</style>
+
+<!-- inline JS 영역-->
+<script th:inline="javascript" type="text/javascript"
+	th:src="@{/js/store.js}"></script>
+</head>
+
+<body>
+	<div layout:fragment="content" class="content">
+		<div id="bodyContainer">
+			<div id="banner">
+				<h2>Store</h2>
+			</div>
+
+			<div class="tab">
+				<a class="tablinks active" onclick="imgGift();"> <img id="gift"
+					src="img/imgCommon/gift_line_163.png">
+					<figcaption id="giftfig">&nbsp gift</figcaption>
+				</a> <a class="tablinks" onclick="imgCouple();"> <img id="couple"
+					src="img/imgCommon/couple_line_163.png">
+					<figcaption id="couplefig">couple</figcaption>
+				</a> <a class="tablinks" onclick="imgParty();"> <img id="party"
+					src="img/imgCommon/party_line_163.png">
+					<figcaption id="partyfig">&nbspparty</figcaption>
+				</a>
+			</div>
+
+			<div class="tabcontent">
+				<div class="miniContainer">
+					<div class="showItem">
+						<div th:each="product : ${productList}" class="itemInfor">
+							<a th:href="'/amall.storedetail.com?prodCode=' + ${product.PROD_CODE}">
+								<div th:class="${product.CATEGORY_LIST}">
+									<div class="itemImage">
+										<img th:src="${product.PROD_IMAGE1}">
+									</div>
+									<div class="itemExplanation">
+										<h6 th:text="${product.SELLER_ID}"></h6>
+										<h5 th:text="${product.PROD_NAME}"></h5>
+										<br>
+										<nav>
+											<a class="bakset" th:onclick="">
+												<img src="img/imgCommon/basket.png">
+											</a>
+											<a class="like">
+												<img src="img/imgCommon/emptyGood.png">
+											</a>
+										</nav>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

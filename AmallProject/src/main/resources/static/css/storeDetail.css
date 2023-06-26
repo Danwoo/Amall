@@ -1,0 +1,169 @@
+#bodyContainer {
+	width: 960px;
+	margin: 20px auto;
+}
+#banner{
+	width : 960px;
+	height : 400px;
+	text-align : center;
+	padding : 20px 100px;
+	background-color: #DAFFDD;
+	font-family: 'Varela Round', sans-serif;
+	display:table;
+}
+
+/*productBanner start*/
+.productBanner{
+	background-color:#EBEBEB;
+	display:table-cell;
+}
+/*Thumbnail cut*/
+.productLeft{
+	float:left;
+}
+
+.productLeft ul{
+	list-style:none;
+}
+.productLeft ul li img{
+	margin : 14px 15px 0px 15px;
+	width : 50px;
+	height : 50px;
+	cursor: pointer;
+	border-radius: 5px;
+}
+#gallery ul li img:visited{
+	border: 2px solid black;
+}
+/* productorder section*/
+.productRight{
+	margin : 7px 20px;
+	padding: 7px;
+	float:right;
+	text-align: left;
+	width:300px;
+}
+
+.productRight .productOrder{
+	display:table-cell;
+	width:250px;
+	background-color: #FFF;
+	margin:5px 10px;
+	padding:7px 12px;
+}
+.productRight .productOrderFinal{
+	display:table-cell;
+	width:300px;
+	margin:5px 10px;
+	padding:15px;
+}
+.ordering{
+	text-align:right;
+}
+
+.toDirect{
+	background-color: #4374D9;
+	padding:5px 20px;
+	margin: 5px 10px;
+	border: none;
+	color: white;
+}
+
+.toBasket{
+	background-color: #747474;
+	padding:5px 20px;
+	margin: 5px;
+	border: none;
+	color: white;
+}
+
+/*product image section*/
+
+.productCenter{
+	margin:14px auto;
+}
+.productCenter img{
+	width:320px;
+	height:320px;
+	border-radius: 10px;
+}
+
+/*productBanner end*/
+
+/*productAnchor Start*/
+.anchor_button{
+	text-align:center;
+	margin-top:50px;
+}
+.anchor_button button{
+	padding:10px;
+	margin : 0px 50px;
+	font-size: 20px;
+	border : none;
+	background-color: transparent;
+	cursor: pointer;
+}
+.detail{
+	text-align:center;
+}
+.detail img{
+	width:500px;
+	height:auto;
+}
+.detail figcaption{
+	margin-bottom:30px;
+}
+
+.review table{
+	text-align:center;
+	table-layout:inherit;
+}
+.QA table{
+	text-align:center;
+	table-layout:inherit;
+}
+
+/* 상품구매정보 탭 table style*/
+.purchaseDetail{
+	align-content:center;
+	text-align:left;
+}
+.deliveryDetail, .returnDetail{
+	width:800px;
+	margin:20px 50px;
+}
+.deliveryDetail table{
+	border-top : 3px solid black;
+}
+.returnDetail table{
+	border-top : 3px solid black;
+}
+.deliveryDetail th{
+	width:200px;
+	height:55px;
+	border-right : 1px solid black;
+	border-bottom : 1px solid black;
+	background-color: #F5F5F5;
+	text-indent:2em;
+	font-size : 12px;
+}
+.returnDetail th{
+	width:200px;
+	height:55px;
+	border-right : 1px solid black;
+	border-bottom : 1px solid black;
+	background-color: #F5F5F5;
+	text-indent:2em;
+	font-size : 12px;
+}
+.deliveryDetail td{
+	border-bottom : 1px solid black;
+	text-indent:2em;
+	font-size: 12px;
+}
+.returnDetail td{
+	border-bottom : 1px solid black;
+	text-indent:2em;
+	width:400px;
+	font-size: 12px;
+}

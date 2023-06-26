@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.amall.product.mapper.ProductMapper">	<!-- xml파일을 사용할 mapper가 있는 경로 -->
+
+	<!-- INSERT문 -->
+	<insert id="signUpMember" parameterType="project.amall.product.dto.ProductDto">
+		<![CDATA[
+			INSERT INTO PRODUCT
+			(	
+				PROD_NUM,
+				PROD_NAME,
+				PROD_CODE,
+				PROD_PRICE,
+				PROD_STOCK,
+				PROD_EXPLANATION,
+				PROD_REG_DATE,
+				PROD_HIT,
+				PROD_DETAIL, 
+				PROD_VAL1,
+				PROD_VAL2,
+				PROD_VAL3, 
+				PROD_STAR,  
+				PROD_SHOW,  
+				SELLER_ID, 
+				CATEGORY_ID,
+				PROD_IMAGE1,
+				PROD_IMAGE2, 
+				PROD_IMAGE3, 
+				PROD_DELIVERYFEE
+			)
+			VALUES
+			(
+				SEQ_PRODUCT.NEXTVAL,
+				#{prodName},
+				DBMS_RANDOM.STRING('x', 8),
+				#{prodPrice},
+				#{prodStock},
+				#{prodExplanation},
+				TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'),
+				0,
+				#{prodDetail},
+				#{prodVal1},
+				#{prodVal2},
+				#{prodVal3},
+				0,
+				1,
+				#{sellerId},
+				#{categoryId},
+				#{prodImage1},
+				#{prodImage2},
+				#{prodImage3},
+				#{prodDeliveryfee}
+			)
+		]]>
+	</insert>
+	
+	<!-- SELECT문 -->
+	<select id="showAllProductStore" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT P.PROD_NAME,
+				   P.PROD_CODE,
+				   P.SELLER_ID,
+				   P.PROD_IMAGE1,
+				   C.CATEGORY_LIST
+			FROM PRODUCT P
+			JOIN CATEGORY C
+			ON (P.CATEGORY_ID = C.CATEGORY_ID)
+		]]>
+	</select>
+	<select id="showProductDetail" parameterType="String" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT P.PROD_NAME,
+			       P.PROD_CODE,
+			       P.PROD_PRICE,
+			       P.PROD_STOCK,
+			       P.PROD_EXPLANATION,
+			       P.PROD_REG_DATE,
+			       P.PROD_HIT,
+			       P.PROD_DETAIL,
+			       P.PROD_VAL1,
+			       P.PROD_VAL2,
+			       P.PROD_VAL3,
+			       P.PROD_STAR,
+			       P.PROD_SHOW,
+			       P.SELLER_ID,
+			       C.CATEGORY_NAME,
+			       P.PROD_IMAGE1,
+			       P.PROD_IMAGE2,
+			       P.PROD_IMAGE3,
+			       P.PROD_DELIVERYFEE
+			FROM PRODUCT P
+			JOIN CATEGORY C
+			ON(P.CATEGORY_ID = C.CATEGORY_ID)
+			WHERE P.PROD_CODE = #{prodCode}
+		]]>
+	</select>
+	<select id="showMain" parameterType="String" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT PROD_NAME, PROD_PRICE, CATEGORY_LIST, PROD_IMAGE1, PROD_CODE
+		       FROM(
+		           SELECT *
+		             FROM PRODUCT P
+		               LEFT OUTER JOIN CATEGORY C
+		               ON(P.CATEGORY_ID = C.CATEGORY_ID)
+		               WHERE(CATEGORY_LIST=#{needCategory})
+		               ORDER BY PROD_HIT DESC
+		            )
+		        WHERE ROWNUM<=4
+		]]>
+	</select>
+	
+	<!-- UPDATE문 -->
+	
+	<!-- DELETE문 -->
+	
+</mapper>

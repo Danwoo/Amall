@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+	<head>
+	    <title>UpdateProfile</title>
+	    
+	    <!-- inline CSS 영역-->
+	    <link th:inline="css" th:href="@{/css/updateProfile.css}" rel="stylesheet"/>
+	    <style type="text/css">
+	    .content {
+	    width: 960px;
+	    margin: auto;
+	    }
+	    </style>
+	
+	    <!-- inline JS 영역-->
+	    <script th:inline="javascript" type="text/javascript" th:src="@{/js/updateProfile.js}"></script> 
+	</head>
+
+	<body>
+		<div layout:fragment="content" class="content">
+          <div id="bodyContainer">
+			<div id="banner">
+				<h2>MY PAGE</h2>
+			</div>
+				<div class="updateProfileForm">
+					<form action="/sendMatching/amall.com" method="post">
+						<table class="updateProfileTable">
+							<tr>
+								<th><h6>상대방 매칭코드</h6></th>
+								<td><input name="memberMatchHash" class="longInput" id="updateProfileMatch" type="text" required></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+								<button style="margin-left: 383px;" class="updateProfileButton updateProfileButtonFirst">매칭 신청 보내기</button>
+								</td>
+							</tr>
+						</table>
+					</form>
+					<form action="/updateprofile/amall.com" method="post" onsubmit="return checkUpdateProfile()">
+						<table class="updateProfileTable">
+							<tr>
+								<th colspan="2"><br><br><h3>♥MY INFO</h3></th>
+							</tr>
+							<tr>
+								<th><h6 style="margin-top: 20px;">아이디*</h6></th>
+								<td><input style="margin-top: 20px;" class="mediumInput" type="text" th:placeholder="${memberDto['memberId']}" disabled></td>
+							</tr>
+							<tr>
+								<th><h6 style="margin-top: 20px;">매칭코드*</h6></th>
+								<td><input name="memberHash" class="longInput" type="text" id="merong" th:placeholder="${memberDto['memberHash']}" >
+                                &nbsp;<button type="button">복사</button></td>
+							</tr>
+							<tr>
+								<th><h6>비밀번호*</h6></th>
+								<td><input name="memberPwd" class="mediumInput" id="updateProfilePwd" type="password"></td>
+							</tr>
+							<tr>
+								<th><h6>비밀번호 확인*</h6></th>
+								<td><input class="mediumInput" id="updateProfileCheckPwd" type="password"></td>
+							</tr>
+							<tr>
+								<th><h6>이름*</h6></th>
+								<td><input class="mediumInput" type="text" th:placeholder="${memberDto['memberName']}" disabled></td>
+							</tr>
+							<tr>
+								<th><h6>주소*</h6></th>
+								<td>
+									<input name="memberPostCode" class="mediumInput" type="text" id="updateProfilePostcode" placeholder="우편번호" th:value="${memberDto['memberPostCode']}" readonly>&nbsp;
+									<input class="searchAddress" type="button" onclick="sample6_execDaumPostcode('updateProfilePostcode', 'updateProfileAddress', 'updateProfileDetailAddress', 'updateProfileExtraAddress')" value="우편번호 찾기">
+								</td>
+							</tr>
+							<tr>
+								<th><h6></h6></th>
+								<td><input name="memberAddress" class="longInput" type="text" id="updateProfileAddress" placeholder="주소" th:value="${memberDto['memberAddress']}" readonly></td>
+							</tr>
+							<tr>
+								<th><h6></h6></th>
+								<td>
+									<input name="memberDetailAddress" class="addressInput" type="text" id="updateProfileDetailAddress" placeholder="상세주소" th:value="${memberDto['memberDetailAddress']}">
+									<input name="memberExtraAddress" class="addressInput" type="text" id="updateProfileExtraAddress" placeholder="참고항목" th:value="${memberDto['memberExtraAddress']}">
+								</td>
+							</tr>
+							<tr>
+								<th><h6>휴대전화*</h6></th>
+								<td><input name="memberPhone" class="mediumInput" id="updateProfilePhone" type="text" th:value="${memberDto['memberPhone']}" placeholder="-을 제외한 번호 입력."></td>
+							</tr>
+							<tr>
+								<th><h6>이메일*</h6></th>
+								<td><input name="memberEmail" class="longInput" id="updateProfileEmail" type="email" th:value="${memberDto['memberEmail']}" required></td>
+							</tr>
+							<tr>
+								<th><h6>생년월일*</h6></th>
+								<td><input name="memberBirth" class="mediumInput" id="updateProfileBirth" type="text" th:value="${memberDto['memberBirth']}" placeholder="ex)900101" required></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<br><br>
+									<button style="margin-left: 200px;" class="updateProfileButton updateProfileButtonFirst">회원정보수정</button>
+									<div class="updateProfileButton" onclick="onClickDeleteId()">회원탈퇴</div>
+									<div class="updateProfileButton" onclick="location.href='/amall.mypage.com'">취소</div>
+								</td>
+							</tr>
+						</table>
+					</form>
+					<!-- 로그아웃 모달창 Start -->
+					<div class="deleteIdModal">
+						<div class="deleteIdModalContent">
+							<div style="display: block;">
+								<h4 class="deleteIdText">계정을 삭제하시겠습니까?</h4>
+								<button class="buttonInDeleteIdModal buttonInDeleteIdModalLeft" onclick="location.href='/delete/amall.com'">Yes</button>
+								<button class="buttonInDeleteIdModal buttonInDeleteIdModalRight" onclick="offClickDeleteId()">No</button>
+							</div>
+						</div>
+					</div>
+					<!-- 로그인 모달창 End -->
+				</div>
+			</div>
+        </div>
+	</body>
+</html>       

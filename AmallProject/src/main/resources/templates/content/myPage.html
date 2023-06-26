@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+	<head>
+	    <title>MyPage</title>
+	    
+	    <!-- inline CSS 영역-->
+	    <link th:inline="css" th:href="@{/css/myPage.css}" rel="stylesheet"/>
+	    <style type="text/css">
+	    .content {
+	    width: 960px;
+	    margin: auto;
+	    }
+	    </style>
+	
+	    <!-- inline JS 영역-->
+	    <script th:inline="javascript" type="text/javascript" th:src="@{/js/myPage.js}"></script>
+	</head>
+
+	<body>
+		<div layout:fragment="content" class="content">
+          <div class="container">
+			<div id="banner">
+				<h2>MY PAGE</h2>
+			</div>
+			<table id="myPageTable">
+				<tr>
+					<td> <span style="line-height:200%"><b>Order List</b><br></span><p>고객님께서 주문하신 상품의<br> 주문내역을 확인하실 수 있습니다.</p></td>
+					<td onclick="openUpdateProfileModal()"><span style="line-height:200%"><b>Profile</b><br></span><p>회원이신 고객님의 개인정보를<br> 관리하는 공간입니다.</p></td>
+				</tr>
+				<tr>
+					<td onclick="location.href='/amall.wishlist.com'"> <span style="line-height:200%"><b>Wish List</b><br></span><p>관심상품으로 등록하신<br> 상품의 목록을 보여드립니다.</p> </td>
+					<td> <span style="line-height:200%"><b>Board</b><br></span><p>고객님께서 작성하신 게시물을<br> 관리하는 공간입니다.</p> </td>
+				</tr>
+				<tr>
+					<td> <span style="line-height:200%"><b>Address</b><br></span> <p>자주 사용하는 배송지를 등록하고<br> 관리하실 수 있습니다.</p> </td>
+					<td> <b>Comming soon</b><br><br><br> </td>
+				</tr>
+			</table>
+			<!-- 본인 확인 모달창 Start -->
+			<div class="checkForGoUpdateProfileModal">
+				<div class="checkForGoUpdateProfileModalContent">
+					<div style="display: block;">
+						<button style="cursor: pointer; color: gray; font-size: 40px;" class="closeCheckForGoUpdateProfile" onclick="closeUpdateProfileModal()" type="button">×</button>
+					</div>
+					<img class="loginLogo" alt="Amall" src="/img/imgCommon/logoAmall.png" width="30%"><br>
+					<form action="/amall.updateprofile.com" method="post">
+						<h6 style="margin-left: 60px;">비밀번호입력</h6>
+						<input name="memberPwd" class="myPageUpdateProfileText" type="password" required><br> <br>
+						<input style="cursor: pointer;" class="checkForGoUpdateProfileSubmit" type="submit" value="확인">
+					</form>
+				</div>
+			</div>
+			<!-- 본인 확인 모달창 End -->
+		  </div>
+        </div>
+	</body>
+</html>       

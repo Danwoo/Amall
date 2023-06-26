@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout/defaultLayout}"
+	layout:fragment="Content">
+<head>
+<title>Bag</title>
+
+<!-- inline CSS 영역-->
+<link th:inline="css" th:href="@{/css/bag.css}" rel="stylesheet" />
+<style type="text/css">
+.content {
+	width: 960px;
+	margin: auto;
+}
+</style>
+
+<!-- inline JS 영역-->
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- <script th:inline="javascript" type="text/javascript" th:src="@{/js/bag.js}"></script> -->
+</head>
+
+<body>
+	<div id="bagBodyContainer">
+		<div id="banner">
+			<h2>Bag</h2>
+		</div>
+		<section class="cart">
+			<div style="font-family: sans-serif;">
+				<ul>
+					<li>장바구니 상품은 최대 30일간 저장됩니다.</li>
+					<li>가격, 옵션 등 정보가 변경된 경우 주문이 불가할 수 있습니다.</li>
+					<li>오늘출발 상품은 판매자 설정 시점에 따라 오늘출발 여부가 변경될 수 있으니 주문 시 꼭 다시 확인해
+						주시기 바랍니다.</li>
+				</ul>
+			</div>
+			<table class="bagTable">
+				<form>
+					<thead class="bagThead" style="font-family: sans-serif;">
+						<tr>
+							<td class="bagTd"></td>
+							<td class="bagTd" colspan="2">상품정보</td>
+							<td class="bagTd">옵션</td>
+							<td class="bagTd">상품금액</td>
+							<td class="bagTd">배송비</td>
+						</tr>
+					</thead>
+					<tbody class="bagTbody">
+						<tr th:each="cart : ${cartList}" class="cartListDetail">
+							<td class="bagTd" style="width: 2%;"><input type="checkbox" class="chk"
+								name="chk"></td>
+							<td class="bagTd" style="width: 13%;"><img class="bagImgTag" th:src="${cart.PROD_IMAGE1}" th:alt="${cart.PROD_NAME}"></td>
+							<td class="bagTd" style="width: 27%;">
+								<a class="bagATag" href="#" th:text="${cart.SELLER_ID}"></a>
+								<span class="bagSpanTag cartListSmartstore"></span>
+								<p class="bagPTag" th:text="${cart.PROD_NAME}"></p> <span class="bagSpanTag price" data-th-text="${#numbers.formatInteger(cart.PROD_PRICE, 1, 'COMMA') + '원'}"></span>
+							</td>
+							<td class="bagTd cartListOption" style="width: 27%;">
+								<p class="bagPTag" data-th-text="${'상품 주문 수량: ' + #numbers.formatInteger(cart.CART_QUANTITY, 1, 'COMMA') + '개'}"></p>
+								<button class="cartListOptionbtn">주문조건 추가/변경</button>
+							</td>
+							<td class="bagTd" style="width: 15%;"><span class="bagSpanTag price" data-th-text="${#numbers.formatInteger((cart.PROD_PRICE * cart.CART_QUANTITY), 1, 'COMMA') + '원'}"></span><br>
+								<button class="cart__list__orderbtn"
+									style="background-color: #f247b8">주문하기</button></td>
+							<td class="bagTd" style="width: 15%;" data-th-text="${#numbers.formatInteger(cart.PROD_DELIVERYFEE, 1, 'COMMA') + '원'}"></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td class="bagTd" colspan="3"><input type="checkbox" id="chkAll"
+								name="chkAll">
+							<button class="cartListOptionbtn">선택상품 삭제</button>
+								<button class="cartListOptionbtn">선택상품 찜</button></td>
+							<td class="bagTd"></td>
+							<td class="bagTd"></td>
+							<td class="bagTd"></td>
+						</tr>
+					</tfoot>
+				</form>
+			</table>
+			<div class="cartMainbtns">
+				<button class="cartBigorderBtn left">쇼핑 계속하기</button>
+				<button class="cartBigorderBtn right">주문하기</button>
+			</div>
+		</section>
+	</div>
+	<script type="text/javascript">
+		$("#chkAll").click(function() {
+			if ($('#chkAll').prop('checked')) {
+				$("input[name=chk]").attr("checked", "checked");
+				$("input[name=chk]").prop("checked", true);
+			} else {
+				$("input[name=chk]").removeAttr("checked", "");
+				$("input[name=chk]").prop("checked", false);
+			}
+			$("input[name=chk]").click(function() {
+				if ($("input[name=chk]").length == $("input[name=chk]:checked").length) {
+					$("#chkAll").attr("checked", "checked");
+					$("#chkAll").prop("checked", true);
+				} else {
+					$("#chkAll").removeAttr("checked", "");
+					$("#chkAll").prop("checked", false);
+				}
+			});
+		});
+	</script>
+</body>
+</html>

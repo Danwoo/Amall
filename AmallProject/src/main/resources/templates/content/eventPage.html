@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+	<head>
+	    <title>EventPage</title>
+	    
+	    <!-- inline CSS 영역-->
+	    <link th:inline="css" th:href="@{/css/eventPage.css}" rel="stylesheet"/>
+	    <style type="text/css">
+	    .content {
+	    width: 960px;
+	    margin: auto;
+	    }
+	    </style>
+	
+	    <!-- inline JS 영역-->
+	    <script th:inline="javascript" type="text/javascript" th:src="@{/js/eventPage.js}"></script>
+	</head>
+
+	<body>
+		<div layout:fragment="content" class="content">
+		<div class="container">
+            <div id="banner">
+				<h2>Event</h2>
+			</div>
+		<div class="tab">
+		  <button class="tablinks active" onclick="openTab(event, 'tab1')">진행중인 이벤트</button>
+		  <button class="tablinks" onclick="openTab(event, 'tab2')">종료된 이벤트</button>
+		</div>
+		
+		<div id="tab1" class="tabcontent">
+		  <div>
+			  <figure>
+			   <a href="#">
+			   <img alt="이벤트1" src="img/imgCommon/event1.jpg">
+			   <figcaption><span>진행중</span><br>화이트 데이 이벤트1</figcaption>
+		 	   </a>
+			  </figure>
+		  </div>
+		  <div>
+			  <figure>
+			   <a href="#">
+			   <img alt="이벤트2" src="img/imgCommon/event2.jpg">
+			   <figcaption><span>진행중</span><br>화이트 데이 이벤트2</figcaption>
+			   </a>
+			  </figure>
+		  </div>
+		</div>
+		<div id="tab2" class="tabcontent">
+	      <div>
+	       <figure>
+             <a href="#">
+	        <img alt="이벤트3" src="img/imgCommon/event3.jpg">
+	        <figcaption><span style="background-color: #a6a6a6; color:#fff">종료</span>&nbsp&nbsp&nbsp<br>발렌타인 데이 이벤트</figcaption>
+	        </a>
+	       </figure>
+	      </div>
+		 </div>
+		</div>
+        </div>
+	</body>
+</html>       

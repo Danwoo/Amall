@@ -1,0 +1,448 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+input:focus {
+	outline:none;
+}
+
+.topContainer {
+	width: 960px;
+	margin: 0 auto 20px auto;
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+.topTopRight {
+	width: 960px;
+	height: 30px;
+	background-color: #f9f0f1;
+	margin: auto;
+}
+
+.topTopRightLink {
+	float: right;
+	width: 60px;
+	margin: 5px 10px;
+	color: gray;
+}
+
+
+.topMenu {
+	display: flex;
+	width: 960px;
+	height: auto;
+	margin: 10px auto 0 auto;
+}
+
+.topLeft {
+	width: 270px;
+	height: auto;
+}
+
+.logoimage {
+	margin-right: 80px;
+}
+
+.topLeftMenu {
+	margin: 10px 0px 5px 200px;
+}
+
+.topMenuLink {
+	color: black;
+	font-size: 15px;
+	width: 100px;
+	margin: 0 20px;
+	font-family: 'NanumSquareAcr';
+}
+
+.topMiddle {
+	width: 420px;
+	height: auto;
+}
+
+.topRight {
+	width: 270px;
+	height: auto;
+}
+
+.topRightLink {
+	float: right;
+	margin: 10px 0 0 0;
+}
+
+/*Login Css Start*/
+.loginModal {
+position: absolute;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+top: 0;
+left: 0;
+z-index: 1;
+overflow: hidden;
+display: none;
+}
+
+.loginModalContent {
+position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+background-color: white;
+}
+
+.openLogin, .logout {
+background-color: transparent;
+border-color: transparent;
+}
+
+.closeLogin {
+display: block;
+background-color: transparent;
+border-color: transparent;
+margin-left: 380px;
+}
+
+.openLogin>img {
+float: left;
+}
+
+.loginLogo {
+float: none;
+display: block;
+margin: 5px auto;
+}
+
+.loginText {
+display: block;
+width:300px;
+height:30px;
+margin: auto;
+font-size:20px;
+background-color: #e0e0e0;
+border-color: transparent;
+}
+
+.loginSubmit {
+display: block;
+width:300px;
+height:30px;
+margin: auto;
+font-size:10px;
+color: white;
+background-color: #4d6bb1;
+border-color: transparent;
+}
+
+.findATag {
+display: block;
+margin: 10px 0 10px 140px;
+}
+/*Login Css End*/
+
+/*Logout Css End*/
+.logoutModal {
+position: absolute;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+top: 0;
+left: 0;
+z-index: 1;
+overflow: hidden;
+display: none;
+}
+
+.logoutModalContent {
+position: fixed;
+width: 300px;
+height: 300px;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #f9f0f1;
+border-radius: 20px;
+border: 10px solid #FFB2D9;
+}
+
+.logoutText {
+	display: block;
+	margin: 70px 0 90px 43px;
+}
+
+.buttonInLogoutModal {
+	padding: auto;
+	width: 90px;
+	height: 30px;
+	border: 2px solid #FFB2D9;
+}
+
+.buttonInLogoutModalLeft {
+	margin-left: 40px;
+	margin-right: 10px;
+}
+
+.buttonInLogoutModalRight {
+	margin-left: 10px;
+}
+/*Logout Css End*/
+
+/*SignUp Css Start*/
+.signUpModal {
+position: absolute;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+top: 0;
+left: 0;
+z-index: 1;
+overflow: hidden;
+display: none;
+}
+
+.signUpModalContent {
+position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+background-color: white;
+}
+
+.openSignUp {
+background-color: transparent;
+border-color: transparent;
+}
+
+.signUpSelectDiv {
+	display: inline-block;
+	width: max-content;
+	margin: 10px auto;
+}
+
+.signUpSelectButton {
+	display: inline-block;
+	text-align: center;
+	width: 100px;
+	background-color: #e0e0e0;
+	color: black;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: none;
+	cursor: pointer;
+}
+
+.selectSignUp {
+	background-color: #f9f0f1;
+	color: #f247b8;
+}
+
+#signUpBuyer {
+	margin-left: 80px;
+	margin-right: 25px;
+}
+
+#signUpSeller {
+	margin-left: 25px;
+	margin-right: 80px;
+}
+
+.signUpFont {
+display: block;
+font-family: 'NanumSquareAcr';
+margin: 0 0 10px 60px;
+}
+
+.closeSignUp {
+display: block;
+background-color: transparent;
+border-color: transparent;
+margin-left: 380px;
+margin-right: 10px;
+}
+
+.openSignUp>img {
+float: left;
+}
+
+.signUpLogo {
+float: none;
+display: block;
+margin: 5px auto;
+}
+
+.signUpSubmit {
+display: block;
+width:300px;
+height:30px;
+margin: auto;
+font-size:10px;
+color: white;
+background-color: #434343;
+border-color: transparent;
+}
+
+.signUpText {
+display: block;
+width:300px;
+height:30px;
+margin: auto;
+font-size:20px;
+background-color: #e0e0e0;
+border-color: transparent;
+}
+
+.signUpTextHalf {
+display: inline-block;
+width:145px;
+height:30px;
+margin: 0 0 20px 50px;
+font-size:20px;
+background-color: #e0e0e0;
+border-color: transparent;
+}
+	
+.signUpTextOne {
+display: inline-block;
+width:20px;
+height:30px;
+margin: auto;
+font-size:20px;
+background-color: #e0e0e0;
+border-color: transparent;
+}
+
+.modalNeedBlock {
+	display: block;
+}
+
+.modalNeedScrollBar {
+	height: 500px;
+	overflow: auto;
+}
+/*SignUp Css End*/
+
+/*MatchingLink Css Start*/
+.matchingLinkModal {
+position: absolute;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+top: 0;
+left: 0;
+z-index: 1;
+overflow: hidden;
+display: none;
+}
+
+.matchingLinkModalContent {
+position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+background-color: white;
+}
+
+.matchingLinkBox{
+display: block;
+width: 300px;
+height: 150px;
+background-color: #f0f0f0;
+margin-left: 60px;
+overflow: auto;
+}
+
+.matchingLinkFont {
+display: block;
+font-family: 'NanumSquareAcr';
+margin: 5px 0 10px 60px;
+}
+
+.closeMatchingLink {
+display: block;
+background-color: transparent;
+border-color: transparent;
+margin-left: 380px;
+margin-right: 10px;
+}
+/*MatchingLink Css End*/
+
+/*Search Bar Css Start*/
+.green_window {
+	margin-top: 18px;
+}
+
+.searchBtn:before {
+   content: "";
+   display: inline-block;
+   position:absolute;
+   width: 0.32em;
+   height: 0.08em;
+   right: -0.2em;
+   bottom: -0.15em;
+   border-width: 0;
+   background: #FFB2D9;
+   transform: rotate(45deg);
+ }
+ 
+ .searchBtn {
+   font-size: 2em;
+   display: inline-block;
+   position: relative;
+   box-sizing: content-box;
+   width: 0.3em;
+   height: 0.32em;
+   border: 0.1em solid #FFB2D9;
+   border-radius: 3em;
+ }
+ 
+ .Btn {
+   width: 40px;
+   height: 38px;
+   border: 2.5px solid white;
+   background: white;
+ }
+.Btn:hover{
+   border: 2.5px solid #FFB2D9;
+   background: white;
+}
+ 
+ .input_text {
+   width: 300px;
+   height: 38px;
+   border: 2.5px solid #FFB2D9;
+   margin-left: 40px;
+ }
+/*Search Bar Css End*/
+
+/*중복코드 Header End*/
+
+/*중복코드 Footer Start*/
+.footContainer {	
+	width: 960px;
+	margin: 20px auto 0 auto;
+}
+
+.footer {
+display: flex;
+background-color: #f9f0f1;
+margin: 20px auto 0 auto;
+padding: 20px 0;
+}
+
+.footInfor {
+width: 240px;
+font-family: Times New Roman;
+color: gray;
+font-family: 'Noto Sans KR', sans-serif;
+}
+
+.footInforDouble {
+width: 480px;
+font-family: Times New Roman;
+color: gray;
+font-family: 'Noto Sans KR', sans-serif;
+}
+/*중복코드 Footer End*/

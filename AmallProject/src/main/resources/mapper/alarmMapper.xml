@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.amall.alarm.mapper.AlarmMapper">	<!-- xml파일을 사용할 mapper가 있는 경로 -->
+	
+	<!-- INSERT문 -->
+	<insert id="sendMatchingMassage" parameterType="java.util.HashMap">
+		<![CDATA[
+			INSERT INTO ALARM
+			(
+				ALARM_ID,
+				SENDER_ID,
+				GETTER_ID
+			)
+			VALUES
+			(
+				#{alarmId},
+				#{myId},
+				#{matchId}
+			)
+		]]>
+	</insert>
+	
+	<!-- SELECT문 -->
+	<select id="CheckSend" parameterType="java.util.HashMap" resultType="project.amall.alarm.dto.AlarmDto">
+		<![CDATA[
+			SELECT *
+			FROM ALARM
+			WHERE SENDER_ID = #{myId}
+			AND GETTER_ID = #{matchId}
+		]]>
+	</select>
+	<select id="getMyAlarm" parameterType="String" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT A.ALARM_ID,
+				   A.SENDER_ID,
+				   Y.MEMBER_NAME SENDER_NAME,
+				   SUBSTR(Y.MEMBER_PHONE, 1, 3) SENDER_PHONE_FRONT,
+				   SUBSTR(Y.MEMBER_PHONE, 8, 4) SENDER_PHONE_BACK,
+				   A.GETTER_ID
+			FROM ALARM A
+			JOIN MEMBER Y
+			ON (A.SENDER_ID = Y.MEMBER_ID)
+			WHERE A.GETTER_ID = #{memberId}
+		]]>
+	</select>
+	
+	<!-- UPDATE문 -->
+	
+	<!-- DELETE문 -->
+	<delete id="deleteMyPostAlarm" parameterType="String">
+		<![CDATA[
+			DELETE ALARM
+			WHERE SENDER_ID = #{myId}
+			OR	  GETTER_ID = #{myId}
+		]]>
+	</delete>
+	
+</mapper>

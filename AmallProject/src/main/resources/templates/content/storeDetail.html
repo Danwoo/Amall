@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+	<head>
+	    <title>StoreDetail</title>
+	    
+	    <!-- inline CSS 영역-->
+	    <link th:inline="css" th:href="@{/css/storeDetail.css}" rel="stylesheet"/>
+	    <style type="text/css">
+	    .content {
+	    width: 960px;
+	    margin: auto;
+	    }
+	    </style>
+	    <!-- inline JS 영역-->
+	    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	    <script th:inline="javascript" type="text/javascript" th:src="@{/js/storeDetail.js}"></script>
+	</head>
+
+	<body>
+		<div layout:fragment="content" class="content">
+		  <div id="bodyContainer" >
+		  <div id="banner">
+			<div class="productBanner">
+			<!-- db 상품정보 연동 -->
+			 <div class="productLeft">
+			  <ul id="gallery">
+			   <li><img th:src="${productDetail[0].PROD_IMAGE1}" alt="thumbnail" onclick="updatePhotoOnClick()"></li>
+			   <li><img th:if="${#strings.contains(productDetail[0],'PROD_IMAGE2')}" th:src="${productDetail[0].PROD_IMAGE2}" alt="thumbnail" onclick="updatePhotoOnClick()"></li>
+			   <li><img th:if="${#strings.contains(productDetail[0],'PROD_IMAGE3')}" th:src="${productDetail[0].PROD_IMAGE3}" alt="thumbnail" onclick="updatePhotoOnClick()"></li>
+			  </ul>
+			 </div>
+			  
+			 <div class="productRight">
+			  <p th:text="${productDetail[0].CATEGORY_NAME}" style="font-size: 8px;"></p>
+			  <h4 th:text="${productDetail[0].PROD_NAME}"></h4>
+			  <hr>
+			  <h3 th:text="${productDetail[0].PROD_PRICE}" style="display:inline;"></h3> <!-- 가격 -->
+			  <h6 th:text="'배송비 : ' + ${productDetail[0].PROD_DELIVERYFEE}" style="line-height: 220%;"></h6>
+			  <p style="font-size:7px;">브랜드사 직접배송</p>
+			  <p style="font-size:7px;">제주도 정기배송/도서산간지역 정기배송</p><br>
+			  <div class="productOrder">
+			   <!-- 수량조정 DB연동하고 하겠습니다. -->
+			   <div style="float: left;">속성드롭박스</div>
+			   <div h:text="${productDetail[0].PROD_PRICE}" style="float: right;"></div> <!-- 가격 -->
+			  </div>
+				<img src="img/imgCommon/starpoint.png" style="width:12px; height:12px;"> <small th:text="'('+${productDetail[0].PROD_STAR}+'.5)'"></small>
+			  &nbsp
+			  <a href="#" style="color:black;">
+			  <small style="text-decoration:underline;">3개의 리뷰보기></small> 
+			  </a>
+			  <br><br><br>
+			  <div class="productOrderFinal">
+			   <div style="float: left;"><b>총 삼품금액</b></div>
+			   <div style="float: right;"><b th:text="${productDetail[0].PROD_PRICE+productDetail[0].PROD_DELIVERYFEE}"></b></div> <!-- 총 주문가격 -->
+			  </div>
+			  <form>
+			   <div class="ordering">
+			     <button type="submit" class="toOrder"><b>바로 구매</b></button>
+			     <button type="submit" class="toBasket"><b>장바구니 </b></button>
+			   </div>
+			  </form>
+			 </div>
+			 
+			 <div class="productCenter">
+			   <img th:src="${productDetail[0].PROD_IMAGE1}" alt="productPhoto" id="productPhoto">
+			 </div>
+			</div>
+		  </div>
+		  <div class="anchor_area">
+		  
+		  <div class="detail" id="detail">
+			<div class="anchor_button">
+				<button class="detail" onclick="scrollToDetail()"><b>상세정보</b></button>
+				<button class="review" onclick="scrollToReview()">후기</button>
+				<button class="QA" onclick="scrollToQA()">상품Q&A</button>
+				<button class="purchaseDetail" onclick="scrollToPurchaseDetail()">상품구매정보</button>
+			</div><hr><br>
+			
+				<figure>
+				   <img alt="사진1" th:src="${productDetail[0].PROD_IMAGE1}">
+				   <figcaption><br th:text="${productDetail[0].PROD_EXPLANATION}"></br></figcaption>
+				</figure>
+				<figure>
+				   <img alt="사진2" th:if="${#strings.contains(productDetail[0],'PROD_IMAGE2')}" th:src="${productDetail[0].PROD_IMAGE2}" >
+				   <figcaption><br></br></figcaption>
+				</figure>
+				<figure>
+				   <img alt="사진3" th:if="${#strings.contains(productDetail[0],'PROD_IMAGE3')}" th:src="${productDetail[0].PROD_IMAGE3}" >
+				   <figcaption><br "${productDetail[0].PROD_DETAIL}">상품설명3</br></figcaption>
+				</figure>
+		  </div>
+			
+		  <div class="review" id="review">
+			<div class="anchor_button">
+				<button class="detail" onclick="scrollToDetail()">상세정보</button>
+				<button class="review" onclick="scrollToReview()"><b>후기</b></button>
+				<button class="QA" onclick="scrollToQA()">상품Q&A</button>
+				<button class="purchaseDetail" onclick="scrollToPurchaseDetail()">상품구매정보</button>
+			</div><hr><br>
+			
+				<table>
+					<tr>
+						<th width="50">번호</th>
+						<th width="200">사진</th>
+						<th width="120">제목</th>
+						<th width="100">작성자</th>
+						<th width="350">내용</th>
+						<th width="120">주문날짜</th>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td><img src="img/imgCommon/alarm.png"></td>
+						<td>Amall~</td>
+						<td>강길동</td>
+						<td>너무 마음에 드네요..</td>
+						<td>203-03-06</td>
+					</tr>
+				</table>
+		  </div>
+			
+		  <div class="QA" id="QA">
+			<div class="anchor_button">
+				<button class="detail" onclick="scrollToDetail()">상세정보</button>
+				<button class="review" onclick="scrollToReview()">후기</button>
+				<button class="QA" onclick="scrollToQA()"><b>상품Q&A</b></button>
+				<button class="purchaseDetail" onclick="scrollToPurchaseDetail()">상품구매정보</button>
+			</div><hr><br>
+				<table>
+					<tr>
+						<th width="50">번호</th>
+						<th width="120">제목</th>
+						<th width="100">작성자</th>
+						<th width="200">문의내용</th>
+						<th width="120">문의날짜</th>
+						<th width="350">답변내용</th>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td>제목입력하세요</td>
+						<td>홍길동</td>
+						<td>양이 너무 많아요</td>
+						<td>2023-03-06 20:06</td>
+						<td>열심히 하세요.화이팅입니다!!!</td>
+				</table>
+		  </div>
+			
+		  <div class="purchaseDetail" id="purchaseDetail">
+			<div class="anchor_button">
+				<button class="detail" onclick="scrollToDetail()">상세정보</button>
+				<button class="review" onclick="scrollToReview()">후기</button>
+				<button class="QA" onclick="scrollToQA()">상품Q&A</button>
+				<button class="purchaseDetail" onclick="scrollToPurchaseDetail()"><b>상품구매정보</b></button>
+			</div><hr><br>
+
+				<h2>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp배송</h2>
+				<div class="deliveryDetail">
+					<table>
+						<tr>
+							<th>배송</th>
+							<td>브랜드사 직접배송</td>
+						</tr>
+						<tr>
+							<th>배송비</th>
+							<td th:text="${productDetail[0].PROD_DELIVERYFEE} + '원'" ></td> <!-- 배송비입력 -->
+						</tr>
+						<tr>
+							<th>제주도/도서산간지역 </th>
+							<td>제주도 : 3,000원 / 도서산간지역 : 5,000원 (추가요금)</td>
+						</tr>
+						<tr>
+							<th>배송불가지역</th>
+							<td>해외배송</td>
+						</tr>
+						<tr>
+							<th>배송기간</th>
+							<td>결제일로부터 3일 이내 발송(공휴일 제외)<p style="font-size:12px;">※천재지변, 물량 수급 변동 등 예외적인 사유 발생 시, 다소 지연될 수 있는 점 양해 부탁드립니다.</p></td>
+						</tr>
+					</table>
+				</div>
+				<br><br>
+				<h2>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp반품/교환</h2>
+				<div class="returnDetail">
+					<table>
+						<tr>
+							<th>반품배송비</th>
+							<td>반품비용 : 6,000원 , 수거비용 : 0원</td>
+						</tr>
+						<tr>
+							<th>교환배송비</th>
+							<td>반품비용 : 6,000원 , 재배송비 : 0원</td>
+						</tr>
+						<tr>
+							<th>보내실 곳</th>
+							<td th:text="${productDetail[0].SELLER_ID}"></td>
+						</tr>
+					</table><br>
+					<div style="font-size : 10px; line-height : 170%">
+					<strong>반품/교환 사유에 따른 요청 가능 기간</strong><br>
+					- 구매자 단순변심에 의한 교환/반품은 제품 수령 후 7일 이내, 교환/반품 제한사항에 해당하지 않는 경우만 가능(구매자가 반품 배송비 부담)<br>
+					- 상품의 내용이 표시,광고의 내용과 다른 경우 상품을 수령한 날부터 3개월 이내, 그 사실을 안 날 또는 알 수 있었던 날부터 30일 이내 가능(판매자가 반품 배송비 부담)<br>
+					<br>
+					<strong>반품/교환 불가사유</strong><br>
+					1. 반품요청기간이 경과한 경우<br>
+					2. 구매자의 책임 있는 사유로 상품 등이 멸실/훼손된 경우(단,상품확인을 위한 훼손은 제외)<br>
+					3. 구배자의 사용 또는 소비에 의해 상품 등의 가치가 현저히 감소한 경우<br>
+					4. 시간의 경과에 의해 재판매가 곤란할 정도로 상품 등의 가치가 현저히 감소한 경우<br>
+					5. 복제가 가능한 상품 등의 포장을 훼손한 경우<br>
+					6. 판매/생산방식의 특성상, 교환/반품 시 판매자에게 회복할 수 없는 손해가 발생하는 경우(주문접수 후 개별생산, 맞품 제작 등)<br>
+					※ 구매자가 반품 비용을 부담하는 경우 환불금액에서 반품비용 차감 후 환불처리됩니다.
+					</div>
+				</div>
+		  </div>
+		 </div>
+        </div>
+       </div>
+	</body>
+</html>       

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.amall.cart.mapper.CartMapper">	<!-- xml파일을 사용할 mapper가 있는 경로 -->
+
+	<!-- INSERT문 -->
+	<insert id="addToCart" parameterType="project.amall.cart.dto.CartDto">
+		<![CDATA[
+			INSERT INTO CART
+			(	
+				CART_ID,
+				CART_QUANTITY,
+				CART_REG_DATE,
+				MEMBER_ID,
+				PROD_NUM
+			)
+			VALUES
+			(
+				#{cartId},
+				#{cartQuantity},
+				#{cartRegDate},
+				#{memberId},
+				#{prodNum}
+			)
+		]]>
+	</insert>
+	
+	<!-- SELECT문 -->
+	<select id="showMyCart" parameterType="String" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT C.CART_QUANTITY,
+				   C.PROD_NUM,
+				   P.PROD_IMAGE1,
+				   P.SELLER_ID,
+				   P.PROD_NAME,
+				   P.PROD_PRICE,
+				   NVL(P.PROD_DELIVERYFEE, 0) PROD_DELIVERYFEE
+			FROM CART C
+			JOIN PRODUCT P
+			ON (C.PROD_NUM = P.PROD_NUM)
+			WHERE C.MEMBER_ID = #{memberId}
+		]]>
+	</select>
+	
+	<!-- UPDATE문 -->
+	
+	<!-- DELETE문 -->
+	
+</mapper>

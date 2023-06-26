@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.amall.member.mapper.MemberMapper">	<!-- xml파일을 사용할 mapper가 있는 경로 -->
+	
+	<!-- INSERT문 -->
+	<insert id="signUpMember" parameterType="project.amall.member.dto.MemberDto">
+		<![CDATA[
+			INSERT INTO MEMBER
+			(
+				MEMBER_ID,
+				MEMBER_NAME,
+				MEMBER_BIRTH, 
+				MEMBER_PWD, 
+				MEMBER_EMAIL, 
+				MEMBER_PHONE, 
+				MEMBER_SEX, 
+				MEMBER_REG_DATE, 
+				MEMBER_CONNECT_DATE, 
+				MEMBER_HASH, 
+				MEMBER_MATCH_ID,
+				MEMBER_POST_CODE,
+				MEMBER_ADDRESS,
+				MEMBER_DETAIL_ADDRESS,
+				MEMBER_EXTRA_ADDRESS
+			)
+			VALUES
+			(
+				#{memberId},
+				#{memberName},
+				#{memberBirth},
+				#{memberPwd},
+				#{memberEmail},
+				#{memberPhone},
+				#{memberSex},
+				TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'),
+				TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'),
+				#{memberHash},
+				NULL,
+				#{memberPostCode},
+				#{memberAddress},
+				#{memberDetailAddress},
+				#{memberExtraAddress}
+			)
+		]]>
+	</insert>
+	
+	<!-- SELECT문 -->
+	<select id="loginMember" parameterType="project.amall.member.dto.MemberDto" resultType="project.amall.member.dto.MemberDto">
+		<![CDATA[
+			SELECT *
+			FROM MEMBER
+			WHERE MEMBER_ID = #{memberId}
+			AND MEMBER_PWD = #{memberPwd}
+		]]>
+	</select>
+	<select id="reloadMemberData" parameterType="String" resultType="project.amall.member.dto.MemberDto">
+		<![CDATA[
+			SELECT *
+			FROM MEMBER
+			WHERE MEMBER_ID = #{memberId}
+		]]>
+	</select>
+	<select id="getDtoUseHash" parameterType="String" resultType="project.amall.member.dto.MemberDto">
+		<![CDATA[
+			SELECT *
+			FROM MEMBER
+			WHERE MEMBER_HASH = #{memberMatchHash}
+		]]>
+	</select>
+	
+	<!-- UPDATE문 -->
+	<update id="updateConnectDate" parameterType="project.amall.member.dto.MemberDto">
+		<![CDATA[
+			UPDATE MEMBER
+			SET MEMBER_CONNECT_DATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI')
+			WHERE MEMBER_HASH = #{memberHash}
+		]]>
+	</update>
+	<update id="updateMember" parameterType="project.amall.member.dto.MemberDto">
+		<![CDATA[
+			UPDATE MEMBER
+			SET MEMBER_BIRTH = #{memberBirth}, 
+				MEMBER_PWD = #{memberPwd}, 
+				MEMBER_EMAIL = #{memberEmail}, 
+				MEMBER_PHONE = #{memberPhone},
+				MEMBER_POST_CODE = #{memberPostCode},
+				MEMBER_ADDRESS = #{memberAddress},
+				MEMBER_DETAIL_ADDRESS = #{memberDetailAddress},
+				MEMBER_EXTRA_ADDRESS = #{memberExtraAddress}
+			WHERE MEMBER_HASH = #{memberHash}
+		]]>
+	</update>
+	<update id="updateMatchId" parameterType="String">
+		<![CDATA[
+			UPDATE MEMBER
+			SET MEMBER_MATCH_ID = #{yourId}
+			WHERE MEMBER_ID = #{myId}
+		]]>
+	</update>
+	
+	<!-- DELETE문 -->
+	<delete id="deleteMember" parameterType="project.amall.member.dto.MemberDto">
+		<![CDATA[
+			DELETE FROM MEMBER
+			WHERE MEMBER_HASH = #{memberHash}
+		]]>
+	</delete>
+	
+</mapper>

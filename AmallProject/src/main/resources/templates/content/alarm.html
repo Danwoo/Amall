@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout/defaultLayout}"
+	layout:fragment="Content">
+<head>
+<title>Matching Alarm</title>
+
+<!-- inline CSS 영역-->
+<link th:inline="css" th:href="@{/css/alarm.css}" rel="stylesheet" />
+<style type="text/css">
+.content {
+	width: 960px;
+	margin: auto;
+	font-family: NanumSquareAcr;
+}
+</style>
+
+<!-- inline JS 영역-->
+<!-- <script th:inline="javascript" type="text/javascript" th:src="@{/js/store.js}"></script> -->
+</head>
+
+<body>
+	<div layout:fragment="content" class="content">
+		<div class="ContainerInAlarmPage">
+			<div class="bannerInAlarmPage">
+				<h2>Matching</h2>
+			</div>
+			<div style="display: inline-block;">
+				<div th:switch="${alarmSize}">
+					<div th:case="0">
+						<div th:if="${checkMatching}">
+							<div class="userImgInAlarmPage" style="text-align: center;">
+								<img
+									src="https://cdn-icons-png.flaticon.com/512/2171/2171990.png">
+								<br> <b th:text="'Name : ' + ${matchDto.memberName}"></b>
+							</div>
+							<div class="matchInfoInAlarmPage">
+								<div class="alarmInAlarmPage">
+									<img src="https://cdn-icons-png.flaticon.com/512/4045/4045241.png">
+									<h3>매칭 완료</h3>
+								</div>
+								<hr width=100% color="lightgray" align="left" size=5 />
+								<p> Name  : [[${matchDto.memberName}]]<br>
+								    ID    : [[${matchDto.memberId}]] <br>
+									Phone : [[${#strings.substring(matchDto.memberPhone, 0, 3)}]]-[[${#strings.substring(matchDto.memberPhone, 3, 7)}]]-[[${#strings.substring(matchDto.memberPhone, 7, 11)}]]<br>
+									MBTI  : ENFP</p>
+								<br>
+								<div class="matchLocationInAlarmPage">
+									<button type="button" class="matchOkbtn" onClick="location.href='/amall.wishlist.com'">상대방의 관심리스트 보러가기</button>
+								</div>
+							</div>
+						</div>
+						<div th:unless="${checkMatching}">
+							<div class="nothingAlarm">아직 매칭 요청이 없습니다.</div>
+						</div>
+					</div>
+					<div th:case="1">
+						<div class="userImgInAlarmPage" style="text-align: center;">
+							<img
+								src="https://cdn-icons-png.flaticon.com/512/2171/2171990.png">
+							<br> <b th:text="'Name : ' + ${alarmList[0].SENDER_NAME}"></b>
+						</div>
+						<div class="matchInfoInAlarmPage">
+							<div class="alarmInAlarmPage">
+								<img
+									src="https://cdn-icons-png.flaticon.com/512/2987/2987996.png">
+								<h3>매칭 요청이 왔습니다</h3>
+							</div>
+							<hr width=100% color="lightgray" align="left" size=5 />
+							<p
+								th:text="'ID : ' + ${#strings.substring(alarmList[0].SENDER_ID, 0, 3)} + '********'"></p>
+							<p>
+								Phone :
+								[[${alarmList[0].SENDER_PHONE_FRONT}]]-****-[[${alarmList[0].SENDER_PHONE_BACK}]]<br>
+								MBTI : ENFP<br> Like : You~♥
+							<p>Message : [[${alarmList[0].GETTER_ID}]]님 저랑 매칭하실래요?</p>
+							<br>
+							<div class="matchLocationInAlarmPage">
+								<a type="button" class="matchbtnInAlarmPage"
+									th:href="@{/acceptmatching/${alarmId}/amall.com(alarmId = ${alarmList[0].ALARM_ID})}"
+									style="padding-top: 5px;">수락</a> <a type="button"
+									class="matchbtnInAlarmPage" onClick="location.href='#'"
+									style="padding-top: 5px;">거절</a>
+							</div>
+						</div>
+					</div>
+					<div th:case="*">
+						<div th:each="alarm : ${alarmList}">
+							<div class="userImgInAlarmPage" style="text-align: center;">
+								<img
+									src="https://cdn-icons-png.flaticon.com/512/2171/2171990.png">
+								<br> <b th:text="'Name : ' + ${alarm.SENDER_NAME}"></b>
+							</div>
+							<div class="matchInfoInAlarmPage">
+								<div class="alarmInAlarmPage">
+									<img
+										src="https://cdn-icons-png.flaticon.com/512/2987/2987996.png">
+									<h3>매칭 요청이 왔습니다</h3>
+								</div>
+								<hr width=100% color="lightgray" align="left" size=5 />
+								<p
+									th:text="'ID : ' + ${#strings.substring(alarm.SENDER_ID, 0, 3)} + '********'"></p>
+								<p>
+									Phone :
+									[[${alarm.SENDER_PHONE_FRONT}]]-****-[[${alarm.SENDER_PHONE_BACK}]]<br>
+									MBTI : ENFP<br> Like : You~♥
+								<p>Message : [[${alarm.GETTER_ID}]]님 저랑 매칭하실래요?</p>
+								<br>
+								<div class="matchLocationInAlarmPage">
+									<a type="button" class="matchbtnInAlarmPage"
+										th:href="@{/acceptmatching/{alarmId}/amall.com(alarmId = ${alarm.ALARM_ID})}"
+										style="padding-top: 5px;">수락</a> <a type="button"
+										class="matchbtnInAlarmPage" onClick="location.href='#'"
+										style="padding-top: 5px;">거절</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

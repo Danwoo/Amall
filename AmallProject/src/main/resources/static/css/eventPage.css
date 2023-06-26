@@ -1,0 +1,65 @@
+.container {
+	width: 960px;
+	margin: 20px auto;
+}
+
+#banner{
+	text-align : center;
+	padding : 35px;
+	background-color: #DAFFD4;
+	font-family: 'Varela Round', sans-serif;
+}
+
+/*Event tab*/
+.tab {
+  width: 100%;
+  height: 50px;
+  margin-top:20px;
+}
+
+.tablinks {
+  float: left;
+  width: 30%;
+  margin-left : 125px;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;      /*탭 비활성화된 상태의 글자색*/
+  background-color: #a6a6a6;  /*탭 비활성화된 상태의 바탕색*/
+  border-radius : 20px;
+}
+.tablinks:hover{
+  transition:0.3s;
+  transform: scale(1.1);
+}
+
+.tablinks.active {
+  color: #000;    /* 탭 활성화된 상태의 글자색 */
+  background-color: #FFD9FA; /* 탭 활성화된 상태의 바탕색 */
+}
+
+.tabcontent{display:inline-block;}
+.tabcontent div{
+  text-align:center;
+  width:470px;
+  height:auto;
+  float:left;
+  margin-top: 20px;
+  margin-left:10px;
+}
+
+.tabcontent div img{
+	width: 250px;
+	height:250px;
+	margin : 10px;
+}
+
+.tabcontent div figcaption span{
+	padding:2px;
+	font-weight:bold;
+	margin-right:80px;
+	text-align:left;
+	background-color: #FFD9FA;
+}

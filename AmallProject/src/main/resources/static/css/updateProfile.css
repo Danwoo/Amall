@@ -1,0 +1,127 @@
+#bodyContainer {
+	width: 960px;
+	margin: 20px auto;
+}
+
+#banner {
+	text-align : center;
+	padding : 35px;
+	background-color: #DAFFD4;
+	font-family: 'Varela Round', sans-serif;
+}
+
+.updateProfileForm {
+	margin: 30px 0;
+	font-family: 'Varela Round', sans-serif;
+}
+
+td>input {
+	border-bottom: 1px solid gray;
+	border-top: none;
+	border-right: none;
+	border-left: none;
+}
+
+th>h6, th>h3 {
+	text-align: left;
+	margin-left: 200px;
+	margin-right: 20px;
+	color: gray;
+}
+
+.mediumInput {
+	width: 150px;
+	background-color: white;
+}
+
+.addressInput {
+	width: 207px;
+	background-color: white;
+}
+
+.longInput {
+	width: 420px;
+	background-color: white;
+}
+
+.searchAddress {
+	border: 1px solid gray;
+	border-radius: 3px;
+	background-color: white;
+	font-size: 10px;
+	padding: 5px 7px;
+	font-family: 'Varela Round', sans-serif;
+	cursor: pointer;
+}
+
+.updateProfileTable {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.updateProfileButton { 
+	display: inline-block;
+	text-align: center;
+	padding-top: 5px;
+	font-size: 10px;
+	font-weight: bold;
+	background-color: #727272;
+	color: white;
+	width: 178px;
+	height: 25px;
+	border: none;
+	border-radius: 5px;
+	font-family: 'Varela Round', sans-serif;
+	cursor: pointer;
+}
+
+/*Delete ID Css End*/
+.deleteIdModal {
+position: absolute;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.8);
+top: 0;
+left: 0;
+z-index: 1;
+overflow: hidden;
+display: none;
+}
+
+.deleteIdModalContent {
+position: fixed;
+width: 300px;
+height: 300px;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: #f9f0f1;
+border-radius: 20px;
+border: 10px solid #FFB2D9;
+}
+
+.deleteIdText {
+	display: block;
+	margin: 70px 0 90px 43px;
+}
+
+.buttonInDeleteIdModal {
+	padding: auto;
+	width: 90px;
+	height: 30px;
+	border: 2px solid #FFB2D9;
+}
+
+.buttonInDeleteIdModalLeft {
+	margin-left: 40px;
+	margin-right: 10px;
+}
+
+.buttonInDeleteIdModalRight {
+	margin-left: 10px;
+}
+
+.updateProfileButtonFirst {
+	padding-top: 0;
+}
+/*Delete ID Css End*/

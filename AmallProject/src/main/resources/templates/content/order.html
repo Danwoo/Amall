@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content">
+	<head>
+	    <title>Order</title>
+	    
+	    <!-- inline CSS 영역-->
+	    <link th:inline="css" th:href="@{/css/order.css}" rel="stylesheet"/>
+	    <style type="text/css">
+	    .content {
+	    width: 960px;
+	    margin: auto;
+	    }
+	    </style>
+	
+	    <!-- inline JS 영역-->
+	    <!-- <script th:inline="javascript" type="text/javascript" th:src="@{/js/updateProfile.js}"></script> --> 
+	</head>
+
+	<body>
+		<div layout:fragment="content" class="content">
+	<div id="orderContainer">
+		<div id="banner">
+			<h2>Order</h2>
+				</div>
+				<!-- 상품정보 확인 -->
+				<div id="OrderNav">
+					<table class="orderInfo">
+						<from>
+						<thead>
+							<tr>
+								<td></td>
+								<td colspan="2">상품정보</td>
+								<td>수량</td>
+								<td>상품금액</td>
+								<td>배송비</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="orderListdetail">
+								<td></td>
+								<td><img
+									src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSibmyJNHD2cj1wAHBcnNkl8EI9DKJTXER1Yg&usqp=CAU"
+									alt="PinkDryFlower"></td>
+								<td><a class="aInOrderPage" href="#">DDD</a><span
+									class="spanInOrderPage orderListSmartStore"></span> <br>Pink
+									dry bouquet</td>
+								<td>
+									<p class="pInOrderPage">1</p>
+								</td>
+								<td><span class="spanInOrderPage price">38,000원</span><br></td>
+								<td>3,000원</td>
+							</tr>
+							<tr class="orderListdetail">
+								<td style="width: 2%;"></td>
+								<td style="width: 13%;"><img
+									src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpw0CiLjQG0_EOVqK74N7z1KrEhYuTE8q5aA&usqp=CAU"
+									alt="GucciRing"></td>
+								<td style="width: 27%;"><a class="aInOrderPage" href="">GUCCI</a><span
+									class="spanInOrderPage orderListSmartStore"></span> <br>Silver
+									Ring</td>
+								<td>
+									<p class="pInOrderPage">1</p>
+								</td>
+								<td style="width: 15%;"><span class="spanInOrderPage price">459,000원</span><br>
+								</td>
+								<td style="width: 15%;">3,000원</td>
+							</tr>
+						</tbody>
+						<tr style="border-bottom: hidden;">
+							<td></td>
+							<td colspan=5><input type="checkbox">&nbsp;모든 상품 동일한
+								배송지</td>
+						</tr>
+						<tfoot>
+		
+						</tfoot>
+						</from>
+					</table>
+		
+				</div>
+		
+				<!-- 주문자 정보 입력 -->
+				<div id=nav>
+					<table class="orderer" style="border-top: hidden;">
+						<from>
+						<tr>
+							<td colspan=2 style="border-bottom: solid 1.5px black;"><b>주문자
+									정보 입력</b></td>
+						</tr>
+						<tr>
+							<td style="width: 25%;">&nbsp;이름</td>
+							<td><input type="text" size="50px"
+								style="width: 120px; height: 30px;"></td>
+						</tr>
+						<tr>
+							<td>전화번호</td>
+							<td><select name="select">
+									<option value="010">&nbsp;010</option>
+									<option value="011">&nbsp;011</option>
+									<option value="016">&nbsp;016</option>
+									<option value="017">&nbsp;017</option>
+									<option value="018">&nbsp;018</option>
+									<option value="019">&nbsp;019</option>
+							</select>&nbsp;-&nbsp; <input type="number" maxlength="4" size="4"
+								style="width: 120px; height: 30px;"> &nbsp;-&nbsp; <input
+								type="number" maxlength="4" size="4"
+								style="width: 120px; height: 30px;"></td>
+						</tr>
+						<tr>
+							<td>이메일</td>
+							<td><input type="text" style="width: 120px; height: 30px;">&nbsp;@&nbsp;
+								<input type="text" style="width: 120px; height: 30px;">&nbsp;
+								<select name="select">
+									<option selected>&nbsp;집적입력</option>
+									<option>&nbsp;naver.com</option>
+									<option>&nbsp;gmail.com</option>
+									<option>&nbsp;hanmail.net</option>
+									<option>&nbsp;nate.com</option>
+									<option>&nbsp;yahoo.com</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td>주소</td>
+							<td><input type="text" disabled
+								style="width: 150px; height: 30px;">&nbsp;
+								<button type="button">주소 등록</button> <br>
+							<br> <input type="text" size="100px"
+								style="width: 400px; height: 30px;"><br>
+							<br> <input type="text" size="100px"
+								style="width: 400px; height: 30px;"></td>
+						</tr>
+						</from>
+					</table>
+				</div>
+		
+		
+				<!-- 수령자 정보 -->
+				<div id=nav>
+					<table class="orderer" style="border-top: hidden;">
+						<from>
+						<thead style="float: left;">
+							<tr>
+								<td colspan=2><b>수령자 정보 입력 1</b></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="border-top: solid 1.5px black;">배송 상품 1</td>
+								<td style="border-top: solid 1.5px black;">Pink dry bouquet</td>
+							</tr>
+							<tr>
+								<td>회원 선택</td>
+								<td><select name="select">
+										<option>&nbsp;본인</option>
+										<option>&nbsp;매칭</option>
+										<option>&nbsp;동일</option>
+										<option>&nbsp;추가</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td style="width: 25%;">&nbsp;이름</td>
+								<td><input type="text" size="50px"
+									style="width: 120px; height: 30px;"></td>
+							</tr>
+							<tr>
+								<td>전화번호</td>
+								<td><select name="select">
+										<option value="010">&nbsp;010</option>
+										<option value="011">&nbsp;011</option>
+										<option value="016">&nbsp;016</option>
+										<option value="017">&nbsp;017</option>
+										<option value="018">&nbsp;018</option>
+										<option value="019">&nbsp;019</option>
+								</select>&nbsp;-&nbsp; <input type="number" maxlength="4" size="4"
+									style="width: 120px; height: 30px;"> &nbsp;-&nbsp; <input
+									type="number" maxlength="4" size="4"
+									style="width: 120px; height: 30px;"></td>
+							</tr>
+							<tr>
+								<td>이메일</td>
+								<td><input type="text" style="width: 120px; height: 30px;">&nbsp;@&nbsp;
+									<input type="text" style="width: 120px; height: 30px;">&nbsp;
+									<select name="select">
+										<option selected>&nbsp;집적입력</option>
+										<option>&nbsp;naver.com</option>
+										<option>&nbsp;gmail.com</option>
+										<option>&nbsp;hanmail.net</option>
+										<option>&nbsp;nate.com</option>
+										<option>&nbsp;yahoo.com</option>
+								</select></td>
+							</tr>
+						</tbody>
+						<tr>
+							<td>주소</td>
+							<td><input type="text" disabled
+								style="width: 150px; height: 30px;">&nbsp;
+								<button type="button">주소 등록</button> <br>
+							<br> <input type="text" disabled size="100px"
+								style="width: 400px; height: 30px;"><br>
+							<br> <input type="text" disabled size="100px"
+								style="width: 400px; height: 30px;"></td>
+						</tr>
+						<tr>
+							<td>배송시 요청사항</td>
+							<td><input type="text" size="100px"
+								style="width: 400px; height: 30px;"></td>
+						</tr>
+						</from>
+					</table>
+				</div>
+		
+				<!-- 수령자 정보 2 -->
+				<div id=nav>
+					<table class="orderer" style="border-top: hidden;">
+						<from>
+						<thead style="float: left;">
+							<tr>
+								<td colspan=2><b>수령자 정보 입력 2</b></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="border-top: solid 1.5px black;">배송 상품 2</td>
+								<td style="border-top: solid 1.5px black;">Silver Ring</td>
+							</tr>
+							<tr>
+								<td>회원 선택</td>
+								<td><select name="select">
+										<option>&nbsp;본인</option>
+										<option>&nbsp;매칭</option>
+										<option>&nbsp;동일</option>
+										<option>&nbsp;추가</option>
+								</select></td>
+							</tr>
+							<tr>
+								<td style="width: 25%;">&nbsp;이름</td>
+								<td><input type="text" size="50px"
+									style="width: 120px; height: 30px;"></td>
+							</tr>
+							<tr>
+								<td>전화번호</td>
+								<td><select name="select">
+										<option value="010">&nbsp;010</option>
+										<option value="011">&nbsp;011</option>
+										<option value="016">&nbsp;016</option>
+										<option value="017">&nbsp;017</option>
+										<option value="018">&nbsp;018</option>
+										<option value="019">&nbsp;019</option>
+								</select>&nbsp;-&nbsp; <input type="number" maxlength="4" size="4"
+									style="width: 120px; height: 30px;"> &nbsp;-&nbsp; <input
+									type="number" maxlength="4" size="4"
+									style="width: 120px; height: 30px;"></td>
+							</tr>
+							<tr>
+								<td>이메일</td>
+								<td><input type="text" style="width: 120px; height: 30px;">&nbsp;@&nbsp;
+									<input type="text" style="width: 120px; height: 30px;">&nbsp;
+									<select name="select">
+										<option selected>&nbsp;집적입력</option>
+										<option>&nbsp;naver.com</option>
+										<option>&nbsp;gmail.com</option>
+										<option>&nbsp;hanmail.net</option>
+										<option>&nbsp;nate.com</option>
+										<option>&nbsp;yahoo.com</option>
+								</select></td>
+							</tr>
+						</tbody>
+						<tr>
+							<td>주소</td>
+							<td><input type="text" disabled
+								style="width: 150px; height: 30px;">&nbsp;
+								<button type="button">주소 등록</button> <br>
+							<br> <input type="text" disabled size="100px"
+								style="width: 400px; height: 30px;"><br>
+							<br> <input type="text" disabled size="100px"
+								style="width: 400px; height: 30px;"></td>
+						</tr>
+						<tr>
+							<td>배송시 요청사항</td>
+							<td><input type="text" size="100px"
+								style="width: 400px; height: 30px;"></td>
+						</tr>
+						</from>
+					</table>
+				</div>
+		
+				<!-- 결제 정보 -->
+				<div class="aside">
+					<table class="sellTable">
+						<from>
+						<thead style="border-top: solid 1.5px black;">
+							<tr class="orderListsub">
+								<td></td>
+								<td>총 상품 금액</td>
+								<td>498,000원</td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="orderListsub" style="border-bottom: hidden;">
+								<td></td>
+								<td>총 할인 금액</td>
+								<td>498,000원</td>
+								<td></td>
+							</tr>
+							<tr class="orderListsub">
+								<td></td>
+								<td>배송비</td>
+								<td>6,000원</td>
+								<td></td>
+							</tr>
+							<tr class="orderListsub">
+								<td></td>
+								<td>총 상품 금액</td>
+								<td>506,000원</td>
+								<td></td>
+							</tr>
+							<tr style="border-bottom: hidden; text-align: center;">
+								<td></td>
+								<td colspan="2"><select name="select"
+									style="width: 200px; height: 50px;">
+										<option value="none">&nbsp;&nbsp;선택</option>
+										<option value="cash">&nbsp;&nbsp;카드</option>
+										<option value="deposit">&nbsp;&nbsp;무통장입금</option>
+										<option value="transfer">&nbsp;&nbsp;실시간계좌이체</option>
+								</select></td>
+								<td></td>
+							</tr>
+							<tr class="orderListsub"
+								style="border-bottom: hidden; vertical-align: center;">
+								<td></td>
+								<td colspan="2">구매하실 판매상품의 조건을 명확히 확인했습니다 동의합니다.(전자상거래법 제 8조
+									2항)<br> <input type="radio" name="yorn" value="yes">동의합니다.&nbsp;&nbsp;<input
+									type="radio" name="yorn" value="no">동의하지 않습니다.
+								</td>
+								<td style="width: 10%;"></td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<div>
+								<tr>
+									<td style="width: 10%;"></td>
+									<td colspan="2" align="center"><br>
+									<button class="orderBigorderBtn right">결제하기</button></td>
+									<td style="width: 10%;"></td>
+								</tr>
+							</div>
+						</tfoot>
+						</from>
+					</table>
+				</div>
+			</div>
+        </div>
+	</body>
+</html>       

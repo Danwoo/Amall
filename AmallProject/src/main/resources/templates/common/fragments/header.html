@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:fragment="HeaderFragment">
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/addressCommon.js}"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<div class="topContainer">
+		<div class="topTopRight">
+			<a class="topTopRightLink" href="#"><h6>고객센터</h6></a>
+			<a class="topTopRightLink" href="/amall.mypage.com"><h6>마이페이지</h6></a>
+			<a class="topTopRightLink openSignUp" onclick="onClickSignUp()" style="cursor: pointer;"><h6>회원가입</h6></a>
+			<!-- 회원가입 모달창 Start -->
+			<div class="signUpModal">
+				<div class="signUpModalContent">
+					<div style="display: block;">
+						<button style="cursor: pointer; color: gray; font-size: 40px;" class="closeSignUp" onclick="offClickSignUp()" type="button">×</button>
+					</div>
+					<div class="signUpSelectDiv">
+						<a class="signUpSelectButton" id="signUpBuyer">구매자</a>
+						<a class="signUpSelectButton" id="signUpSeller">판매자</a>
+					</div>
+					<h4 class="signUpFont">회원정보 입력</h4>
+					<br>
+					<form action="/signup/amall.com" method="post" onsubmit="return signUpCheck()">
+						<div class="modalNeedBlock">
+							<div class="modalNeedScrollBar">
+								<h6 style="margin-left: 60px;">아이디*</h6>
+								<input name="memberId" id="signMemberId" class="signUpText" type="text" required><br>
+								<h6 style="margin-left: 60px;">이름*</h6>
+								<input name="memberName" id="signMemberName" class="signUpText" type="text" required><br>
+								<h6 style="margin-left: 60px;">주민등록번호*</h6>
+								<input name="memberBirth" id="signMemberBirth" class="signUpTextHalf" type="text" required>-<input name="memberSex" id="signMemberSex" class="signUpTextOne" type="text" required> ● ● ● ● ● ● <br>
+								<h6 style="margin-left: 60px;">비밀번호*</h6>
+								<input name="memberPwd" id="signMemberPwd" class="signUpText" type="password" required><br>
+								<h6 style="margin-left: 60px;">비밀번호 확인*</h6>
+								<input id="signMemberPwdCheck" class="signUpText" type="password" required><br>
+								<h6 style="margin-left: 60px;">이메일*</h6>
+								<input name="memberEmail" id="signMemberEmail" class="signUpText" type="text" required><br>
+								<h6 style="margin-left: 60px;">주소*</h6>
+								<input name="memberPostCode" class="signUpTextHalf" type="text" id="signMemberPostCode" placeholder="우편번호" readonly required>&nbsp;
+								<input class="searchAddress" type="button" onclick="sample6_execDaumPostcode('signMemberPostCode', 'signMemberAddres', 'signMemberDetailAddress', 'signMemberExtraAddress')" value="우편번호 찾기"><br>
+								<input name="memberAddress" id="signMemberAddres" class="signUpText" type="text" placeholder="주소" readonly required><br>
+								<input name="memberDetailAddress" id="signMemberDetailAddress" class="signUpText" type="text" placeholder="상세주소" required><br>
+								<input name="memberExtraAddress" id="signMemberExtraAddress" class="signUpText" type="text" placeholder="참고항목"><br>
+								<h6 style="margin-left: 60px;">전화번호*</h6>
+								<input name="memberPhone" id="signMemberPhone" class="signUpText" type="text" required><br> <br>
+							</div>
+							<input style="cursor: pointer;" class="signUpSubmit" type="submit" value="회원가입"><br>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- 회원가입 모달창 End -->
+		</div>
+		<!-- topTopRight -->
+		<div class="topMenu">
+			<div class="topLeft">
+				<a href="/amall.com" class="logoimage"><img alt="Amall" src="/img/imgCommon/logoAmall.png" width="200px" height="62px"></a>
+			</div>
+			<div class="topMiddle">
+				<div class="green_window">
+					<form action="" method="GET">
+						<input type="text" class="input_text" name="query" placeholder="상품을 입력해 주세요.">
+						<button class="Btn" type="submit">
+							<div class="searchBtn"></div>
+						</button>
+					</form>
+				</div>
+			</div>
+			<!-- topLeft -->
+			<div class="topRight">
+				<a class="topRightLink" href="/amall.bag.com"><img alt="장바구니" src="/img/imgCommon/shoppingBasket.png" width="50%"></a>
+				<a th:unless="${checkLogin}" class="topRightLink openLogin" onclick="onClickLogin()" style="cursor: pointer;"><img alt="로그인" src="/img/imgCommon/login.png" width="50%"></a>
+				<!-- 로그인 모달창 Start -->
+				<div class="loginModal">
+					<div class="loginModalContent">
+						<div style="display: block;">
+							<button style="cursor: pointer; color: gray; font-size: 40px;" class="closeLogin" onclick="offClickLogin()" type="button">×</button>
+						</div>
+						<img class="loginLogo" alt="Amall" src="/img/imgCommon/logoAmall.png" width="30%"><br>
+						<form action="/login/amall.com" method="post">
+							<h6 style="margin-left: 60px;">아이디*</h6>
+							<input name="memberId" class="loginText" type="text" required><br> <br>
+							<h6 style="margin-left: 60px;">비밀번호*</h6>
+							<input name="memberPwd" class="loginText" type="password" required><br> <br>
+							<input style="cursor: pointer;" class="loginSubmit" type="submit" value="로그인">
+						</form>
+						<br>
+						<div class="findATag">
+							<a class="openSignUpInLogin" onclick="onClickSignUpInLogin()" href="#" style="color: gray; font-size: 10px;">회원가입</a>&nbsp;
+							<a href="#" style="color: gray; font-size: 10px;">아이디·비밀번호 찾기</a>
+						</div>
+					</div>
+				</div>
+				<!-- 로그인 모달창 End -->
+				<a th:if="${checkLogin}" class="topRightLink logout" onclick="onClickLogout()" style="cursor: pointer;"><img alt="로그아웃" src="/img/imgCommon/logout.png" width="50%"></a>
+				<!-- 로그아웃 모달창 Start -->
+				<div class="logoutModal">
+					<div class="logoutModalContent">
+						<div style="display: block;">
+							<h4 class="logoutText">정말 로그아웃 하시겠습니까?</h4>
+							<button class="buttonInLogoutModal buttonInLogoutModalLeft" onclick="location.href='/logout/amall.com'">Yes</button>
+							<button class="buttonInLogoutModal buttonInLogoutModalRight" onclick="offClickLogout()">No</button>
+						</div>
+					</div>
+				</div>
+				<!-- 로그인 모달창 End -->
+				<a class="topRightLink" onclick="location.href='/amall.alarm.com'" style="cursor: pointer;"><img alt="알람" src="/img/imgCommon/alarm.png" width="50%"></a>
+			</div>
+			<!-- topRight -->
+		</div>
+		<!-- topMenu -->
+		<div>
+			<a class="topMenuLink" href="/amall.store.com" style="margin-left: 340px">스토어</a>
+			<a class="topMenuLink" href="/amall.eventpage.com">이벤트</a> <a class="topMenuLink" href="#">후기</a> <a class="topMenuLink" href="#">Amor</a>
+		</div>
+	</div>
+</html>
