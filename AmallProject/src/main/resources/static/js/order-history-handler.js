@@ -33,19 +33,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 	setupOrderDetailModal();
 });
 
-/**
- * 페이지에서 회원 ID 추출
- */
-function getMemberIdFromPage() {
-	// Thymeleaf에서 주입한 memberId를 찾음
-	const metaTag = document.querySelector('meta[name="member-id"]');
-	if (metaTag) {
-		return metaTag.getAttribute('content');
-	}
-
-	// 세션 스토리지에서 조회
-	return sessionStorage.getItem('memberId');
-}
+// getMemberIdFromPage() is now in common-utils.js
 
 /**
  * 탭 전환 설정
@@ -287,47 +275,7 @@ function createOrderCard(order, memberId, isGift) {
 	return card;
 }
 
-/**
- * 주문 상태 한글 변환
- */
-function getOrderStatusText(status) {
-	const statusMap = {
-		'PENDING': '결제 대기',
-		'PAID': '결제 완료',
-		'SHIPPED': '배송 중',
-		'DELIVERED': '배송 완료',
-		'CANCELLED': '취소됨'
-	};
-	return statusMap[status] || status;
-}
-
-/**
- * 날짜 포맷팅
- */
-function formatDate(dateString) {
-	if (!dateString) return '';
-
-	try {
-		const date = new Date(dateString);
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const day = String(date.getDate()).padStart(2, '0');
-		const hours = String(date.getHours()).padStart(2, '0');
-		const minutes = String(date.getMinutes()).padStart(2, '0');
-
-		return `${year}-${month}-${day} ${hours}:${minutes}`;
-	} catch (error) {
-		return dateString;
-	}
-}
-
-/**
- * 가격 포맷팅
- */
-function formatPrice(price) {
-	if (!price && price !== 0) return '0';
-	return Number(price).toLocaleString('ko-KR');
-}
+// getOrderStatusText(), formatDate(), and formatPrice() are now in common-utils.js
 
 /**
  * 주문 취소 처리

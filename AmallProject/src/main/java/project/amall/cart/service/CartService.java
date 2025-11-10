@@ -1,7 +1,5 @@
 package project.amall.cart.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -13,6 +11,8 @@ import project.amall.cart.dto.CartDto;
 import project.amall.cart.mapper.CartMapper;
 import project.amall.common.exception.BusinessException;
 import project.amall.common.exception.code.ErrorCode;
+import project.amall.common.util.DateTimeUtils;
+import project.amall.common.util.IdGenerator;
 import project.amall.member.dto.MemberDto;
 import project.amall.member.mapper.MemberMapper;
 import project.amall.product.dto.ProductDto;
@@ -98,9 +98,9 @@ public class CartService {
 		} else {
 			// 새로 추가
 			CartDto cartDto = new CartDto();
-			cartDto.setCartId(generateCartId());
+			cartDto.setCartId(IdGenerator.generateCartId());
 			cartDto.setCartQuantity(quantity);
-			cartDto.setCartRegDate(getCurrentDateTime());
+			cartDto.setCartRegDate(DateTimeUtils.getCurrentDateTime());
 			cartDto.setMemberId(memberId);
 			cartDto.setProdNum(prodNum);
 			cartDto.setAsNormalPurchase();  // 기본은 일반 구매
@@ -180,9 +180,9 @@ public class CartService {
 		} else {
 			// 새로 추가
 			CartDto cartDto = new CartDto();
-			cartDto.setCartId(generateCartId());
+			cartDto.setCartId(IdGenerator.generateCartId());
 			cartDto.setCartQuantity(quantity);
-			cartDto.setCartRegDate(getCurrentDateTime());
+			cartDto.setCartRegDate(DateTimeUtils.getCurrentDateTime());
 			cartDto.setMemberId(memberId);
 			cartDto.setProdNum(prodNum);
 			cartDto.setAsGift(giftToMemberId, giftMessage);
@@ -350,19 +350,5 @@ public class CartService {
 		log.debug("커플 매칭 확인 완료: {} ↔ {}", memberId, targetMemberId);
 	}
 
-	/**
-	 * 장바구니 ID 생성
-	 *
-	 * TODO: 실제로는 시퀀스나 AUTO_INCREMENT 사용 권장
-	 */
-	private int generateCartId() {
-		return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
-	}
-
-	/**
-	 * 현재 날짜시간 문자열 반환
-	 */
-	private String getCurrentDateTime() {
-		return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-	}
+	// ID 생성 및 날짜시간 유틸리티는 IdGenerator와 DateTimeUtils로 통합됨
 }

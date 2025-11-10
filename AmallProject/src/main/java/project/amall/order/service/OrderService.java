@@ -8,6 +8,7 @@ import project.amall.cart.dto.CartDto;
 import project.amall.cart.mapper.CartMapper;
 import project.amall.common.exception.BusinessException;
 import project.amall.common.exception.code.ErrorCode;
+import project.amall.common.util.IdGenerator;
 import project.amall.gift.dto.GiftDeliveryRequestDto;
 import project.amall.gift.mapper.GiftDeliveryRequestMapper;
 import project.amall.member.dto.MemberDto;
@@ -18,8 +19,6 @@ import project.amall.order.mapper.OrderMapper;
 import project.amall.product.dto.ProductDto;
 import project.amall.product.mapper.ProductMapper;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +82,7 @@ public class OrderService {
 		int deliveryFee = calculateDeliveryFee(cartList);
 
 		// (4) 주문 생성
-		String orderId = generateOrderId(memberId);
+		String orderId = IdGenerator.generateOrderId(memberId);
 		OrderDto order = new OrderDto();
 		order.setOrderId(orderId);
 		order.setOrderStatus(OrderDto.OrderStatus.PENDING.getCode());
@@ -193,7 +192,7 @@ public class OrderService {
 		}
 
 		// (7) 주문 생성 (배송지 정보 없음)
-		String orderId = generateOrderId(memberId);
+		String orderId = IdGenerator.generateOrderId(memberId);
 		OrderDto order = new OrderDto();
 		order.setOrderId(orderId);
 		order.setOrderStatus(OrderDto.OrderStatus.PENDING.getCode());
@@ -456,15 +455,7 @@ public class OrderService {
 				.orElse(0);
 	}
 
-	/**
-	 * 주문 ID 생성
-	 *
-	 * 형식: ORD-{회원ID}-{타임스탬프}
-	 */
-	private String generateOrderId(String memberId) {
-		String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-		return "ORD-" + memberId + "-" + timestamp;
-	}
+	// 주문 ID 생성은 IdGenerator로 통합됨
 
 	/**
 	 * 주문 상품 추가

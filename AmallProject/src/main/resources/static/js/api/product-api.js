@@ -260,13 +260,4 @@ async function handleAddToWishList(prodNum) {
 	}
 }
 
-/**
- * 페이지에서 회원 ID 추출
- */
-function getMemberIdFromPage() {
-	const metaTag = document.querySelector('meta[name="member-id"]');
-	if (metaTag) {
-		return metaTag.getAttribute('content');
-	}
-	return sessionStorage.getItem('memberId');
-}
+// getMemberIdFromPage() is now in common-utils.js

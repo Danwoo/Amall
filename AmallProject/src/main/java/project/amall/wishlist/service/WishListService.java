@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import project.amall.common.exception.BusinessException;
 import project.amall.common.exception.code.ErrorCode;
+import project.amall.common.util.IdGenerator;
 import project.amall.member.dto.MemberDto;
 import project.amall.member.mapper.MemberMapper;
 import project.amall.product.dto.ProductDto;
@@ -72,7 +73,7 @@ public class WishListService {
 
 		// (3) 위시리스트에 추가
 		WishListDto wishListDto = new WishListDto();
-		wishListDto.setWishlistId(generateWishlistId());
+		wishListDto.setWishlistId(IdGenerator.generateWishlistId());
 		wishListDto.setMemberId(memberId);
 		wishListDto.setProdNum(prodNum);
 
@@ -176,12 +177,5 @@ public class WishListService {
 
 	// ========== Private Helper Methods ==========
 
-	/**
-	 * 위시리스트 ID 생성
-	 *
-	 * TODO: 실제로는 시퀀스나 AUTO_INCREMENT 사용 권장
-	 */
-	private int generateWishlistId() {
-		return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
-	}
+	// 위시리스트 ID 생성은 IdGenerator로 통합됨
 }
