@@ -70,6 +70,35 @@
 		]]>
 	</insert>
 
+	<!-- ResultMap for Order with OrderItems -->
+	<resultMap id="OrderWithItemsMap" type="project.amall.order.dto.OrderDto">
+		<id property="orderId" column="ORDER_ID"/>
+		<result property="orderDate" column="ORDER_DATE"/>
+		<result property="orderStatus" column="ORDER_STATUS"/>
+		<result property="memberId" column="MEMBER_ID"/>
+		<result property="deliveryName" column="DELIVERY_NAME"/>
+		<result property="deliveryPhone" column="DELIVERY_PHONE"/>
+		<result property="deliveryPostCode" column="DELIVERY_POST_CODE"/>
+		<result property="deliveryAddress" column="DELIVERY_ADDRESS"/>
+		<result property="deliveryDetailAddress" column="DELIVERY_DETAIL_ADDRESS"/>
+		<result property="deliveryMessage" column="DELIVERY_MESSAGE"/>
+		<result property="totalAmount" column="TOTAL_AMOUNT"/>
+		<result property="deliveryFee" column="DELIVERY_FEE"/>
+		<result property="paymentMethod" column="PAYMENT_METHOD"/>
+		<result property="isGift" column="IS_GIFT"/>
+		<result property="giftFromMemberId" column="GIFT_FROM_MEMBER_ID"/>
+		<result property="giftMessage" column="GIFT_MESSAGE"/>
+
+		<collection property="orderItems" ofType="project.amall.order.dto.OrderItemDto">
+			<id property="orderItemId" column="ORDER_ITEM_ID"/>
+			<result property="orderId" column="ORDER_ID"/>
+			<result property="prodNum" column="PROD_NUM"/>
+			<result property="prodName" column="PROD_NAME"/>
+			<result property="prodPrice" column="PROD_PRICE"/>
+			<result property="quantity" column="QUANTITY"/>
+		</collection>
+	</resultMap>
+
 	<!-- SELECT문 -->
 	<select id="findOrderById" parameterType="String" resultType="project.amall.order.dto.OrderDto">
 		<![CDATA[
@@ -108,52 +137,64 @@
 		]]>
 	</select>
 
-	<select id="findOrdersByMemberId" parameterType="String" resultType="project.amall.order.dto.OrderDto">
+	<select id="findOrdersByMemberId" parameterType="String" resultMap="OrderWithItemsMap">
 		<![CDATA[
-			SELECT ORDER_ID AS orderId,
-				   ORDER_DATE AS orderDate,
-				   ORDER_STATUS AS orderStatus,
-				   MEMBER_ID AS memberId,
-				   DELIVERY_NAME AS deliveryName,
-				   DELIVERY_PHONE AS deliveryPhone,
-				   DELIVERY_POST_CODE AS deliveryPostCode,
-				   DELIVERY_ADDRESS AS deliveryAddress,
-				   DELIVERY_DETAIL_ADDRESS AS deliveryDetailAddress,
-				   DELIVERY_MESSAGE AS deliveryMessage,
-				   TOTAL_AMOUNT AS totalAmount,
-				   DELIVERY_FEE AS deliveryFee,
-				   PAYMENT_METHOD AS paymentMethod,
-				   IS_GIFT AS isGift,
-				   GIFT_FROM_MEMBER_ID AS giftFromMemberId,
-				   GIFT_MESSAGE AS giftMessage
-			FROM ORDERS
-			WHERE MEMBER_ID = #{memberId}
-			ORDER BY ORDER_DATE DESC
+			SELECT O.ORDER_ID,
+				   O.ORDER_DATE,
+				   O.ORDER_STATUS,
+				   O.MEMBER_ID,
+				   O.DELIVERY_NAME,
+				   O.DELIVERY_PHONE,
+				   O.DELIVERY_POST_CODE,
+				   O.DELIVERY_ADDRESS,
+				   O.DELIVERY_DETAIL_ADDRESS,
+				   O.DELIVERY_MESSAGE,
+				   O.TOTAL_AMOUNT,
+				   O.DELIVERY_FEE,
+				   O.PAYMENT_METHOD,
+				   O.IS_GIFT,
+				   O.GIFT_FROM_MEMBER_ID,
+				   O.GIFT_MESSAGE,
+				   OI.ORDER_ITEM_ID,
+				   OI.PROD_NUM,
+				   OI.PROD_NAME,
+				   OI.PROD_PRICE,
+				   OI.QUANTITY
+			FROM ORDERS O
+			LEFT JOIN ORDER_ITEM OI ON O.ORDER_ID = OI.ORDER_ID
+			WHERE O.MEMBER_ID = #{memberId}
+			ORDER BY O.ORDER_DATE DESC, OI.ORDER_ITEM_ID
 		]]>
 	</select>
 
-	<select id="findGiftOrdersReceivedByMemberId" parameterType="String" resultType="project.amall.order.dto.OrderDto">
+	<select id="findGiftOrdersReceivedByMemberId" parameterType="String" resultMap="OrderWithItemsMap">
 		<![CDATA[
-			SELECT ORDER_ID AS orderId,
-				   ORDER_DATE AS orderDate,
-				   ORDER_STATUS AS orderStatus,
-				   MEMBER_ID AS memberId,
-				   DELIVERY_NAME AS deliveryName,
-				   DELIVERY_PHONE AS deliveryPhone,
-				   DELIVERY_POST_CODE AS deliveryPostCode,
-				   DELIVERY_ADDRESS AS deliveryAddress,
-				   DELIVERY_DETAIL_ADDRESS AS deliveryDetailAddress,
-				   DELIVERY_MESSAGE AS deliveryMessage,
-				   TOTAL_AMOUNT AS totalAmount,
-				   DELIVERY_FEE AS deliveryFee,
-				   PAYMENT_METHOD AS paymentMethod,
-				   IS_GIFT AS isGift,
-				   GIFT_FROM_MEMBER_ID AS giftFromMemberId,
-				   GIFT_MESSAGE AS giftMessage
-			FROM ORDERS
-			WHERE IS_GIFT = 'Y'
-			  AND MEMBER_ID = #{memberId}
-			ORDER BY ORDER_DATE DESC
+			SELECT O.ORDER_ID,
+				   O.ORDER_DATE,
+				   O.ORDER_STATUS,
+				   O.MEMBER_ID,
+				   O.DELIVERY_NAME,
+				   O.DELIVERY_PHONE,
+				   O.DELIVERY_POST_CODE,
+				   O.DELIVERY_ADDRESS,
+				   O.DELIVERY_DETAIL_ADDRESS,
+				   O.DELIVERY_MESSAGE,
+				   O.TOTAL_AMOUNT,
+				   O.DELIVERY_FEE,
+				   O.PAYMENT_METHOD,
+				   O.IS_GIFT,
+				   O.GIFT_FROM_MEMBER_ID,
+				   O.GIFT_MESSAGE,
+				   OI.ORDER_ITEM_ID,
+				   OI.PROD_NUM,
+				   OI.PROD_NAME,
+				   OI.PROD_PRICE,
+				   OI.QUANTITY
+			FROM ORDERS O
+			LEFT JOIN ORDER_ITEM OI ON O.ORDER_ID = OI.ORDER_ID
+			WHERE O.IS_GIFT = 'Y'
+			  AND O.MEMBER_ID = #{memberId}
+			ORDER BY O.ORDER_DATE DESC, OI.ORDER_ITEM_ID
 		]]>
 	</select>
 
