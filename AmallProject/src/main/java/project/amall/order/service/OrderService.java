@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.amall.cart.dto.CartDto;
 import project.amall.cart.mapper.CartMapper;
+import project.amall.common.constants.AppConstants;
 import project.amall.common.exception.BusinessException;
 import project.amall.common.exception.code.ErrorCode;
 import project.amall.common.util.IdGenerator;
@@ -53,6 +54,7 @@ public class OrderService {
 	 * @param deliveryMessage 배송 메시지
 	 * @param paymentMethod 결제 방법
 	 * @return 주문 ID
+	 * @throws BusinessException 회원이 없거나, 장바구니를 찾을 수 없거나, 재고가 부족한 경우
 	 */
 	@Transactional
 	public String createOrder(
@@ -69,13 +71,11 @@ public class OrderService {
 		log.debug("일반 주문 생성: memberId={}, cartIds={}", memberId, cartIds);
 
 		// (1) 회원 존재 여부 확인
-		MemberDto member = memberMapper.getMemberById(memberId);
-		if (member == null) {
-			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "memberId=" + memberId);
-		}
+		validateMemberExists(memberId);
 
 		// (2) 장바구니 아이템 조회 및 검증
 		List<CartDto> cartList = getCartListByIds(memberId, cartIds);
+		validateNoGiftItems(cartList);
 
 		// (3) 총 금액 계산
 		int totalAmount = calculateTotalAmount(cartList);
@@ -105,13 +105,7 @@ public class OrderService {
 
 		// (5) 재고 차감
 		for (CartDto cart : cartList) {
-			int stockResult = productMapper.decreaseStock(cart.getProdNum(), cart.getCartQuantity());
-			if (stockResult == 0) {
-				throw new BusinessException(
-						ErrorCode.INVALID_INPUT_VALUE,
-						"재고가 부족합니다: " + cart.getProductDto().getProdName()
-				);
-			}
+			decreaseProductStock(cart);
 		}
 
 		// (6) 주문 상품 추가
@@ -139,6 +133,7 @@ public class OrderService {
 	 * @param giftMessage 선물 메시지
 	 * @param paymentMethod 결제 방법
 	 * @return 주문 ID
+	 * @throws BusinessException 회원이 없거나, 선물 상품이 아니거나, 재고가 부족한 경우
 	 */
 	@Transactional
 	public String createGiftOrder(
@@ -150,10 +145,7 @@ public class OrderService {
 		log.debug("선물 주문 생성: memberId={}, cartId={}, giftMessage={}", memberId, cartId, giftMessage);
 
 		// (1) 회원 존재 여부 확인
-		MemberDto member = memberMapper.getMemberById(memberId);
-		if (member == null) {
-			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "memberId=" + memberId);
-		}
+		validateMemberExists(memberId);
 
 		// (2) 장바구니 아이템 조회 및 검증
 		List<CartDto> cartList = getCartListByIds(memberId, List.of(cartId));
@@ -164,7 +156,7 @@ public class OrderService {
 		CartDto cart = cartList.get(0);
 
 		// (3) 선물 정보 검증
-		if (!"Y".equals(cart.getIsGift())) {
+		if (!AppConstants.IS_GIFT_YES.equals(cart.getIsGift())) {
 			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "선물 상품이 아닙니다.");
 		}
 
@@ -183,13 +175,7 @@ public class OrderService {
 		int deliveryFee = calculateDeliveryFee(cartList);
 
 		// (6) 재고 차감
-		int stockResult = productMapper.decreaseStock(cart.getProdNum(), cart.getCartQuantity());
-		if (stockResult == 0) {
-			throw new BusinessException(
-					ErrorCode.INVALID_INPUT_VALUE,
-					"재고가 부족합니다: " + cart.getProductDto().getProdName()
-			);
-		}
+		decreaseProductStock(cart);
 
 		// (7) 주문 생성 (배송지 정보 없음)
 		String orderId = IdGenerator.generateOrderId(memberId);
@@ -241,6 +227,7 @@ public class OrderService {
 	 * @param deliveryAddress 주소
 	 * @param deliveryDetailAddress 상세주소
 	 * @param deliveryMessage 배송 메시지
+	 * @throws BusinessException 주문이 없거나, 권한이 없거나, 선물 주문이 아닌 경우
 	 */
 	@Transactional
 	public void updateDeliveryAddress(
@@ -264,7 +251,7 @@ public class OrderService {
 		}
 
 		// (3) 선물 주문인지 확인
-		if (!"Y".equals(order.getIsGift())) {
+		if (!AppConstants.IS_GIFT_YES.equals(order.getIsGift())) {
 			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "선물 주문이 아닙니다.");
 		}
 
@@ -301,6 +288,7 @@ public class OrderService {
 	 *
 	 * @param orderId 주문 ID
 	 * @return 주문 정보
+	 * @throws BusinessException 주문을 찾을 수 없는 경우
 	 */
 	public OrderDto getOrderWithItems(String orderId) {
 		OrderDto order = orderMapper.findOrderById(orderId);
@@ -342,6 +330,7 @@ public class OrderService {
 	 *
 	 * @param memberId 회원 ID
 	 * @param orderId 주문 ID
+	 * @throws BusinessException 주문이 없거나, 권한이 없거나, 취소할 수 없는 상태인 경우
 	 */
 	@Transactional
 	public void cancelOrder(String memberId, String orderId) {
@@ -353,7 +342,7 @@ public class OrderService {
 		// (2) 권한 확인
 		if (!memberId.equals(order.getMemberId())) {
 			// 선물 주문의 경우 선물 보낸 사람도 취소 가능
-			if (!"Y".equals(order.getIsGift()) || !memberId.equals(order.getGiftFromMemberId())) {
+			if (!AppConstants.IS_GIFT_YES.equals(order.getIsGift()) || !memberId.equals(order.getGiftFromMemberId())) {
 				throw new BusinessException(ErrorCode.FORBIDDEN, "주문 취소 권한이 없습니다.");
 			}
 		}
@@ -383,9 +372,9 @@ public class OrderService {
 		}
 
 		// (6) 선물 주문인 경우 배송지 입력 요청도 취소 처리
-		if ("Y".equals(order.getIsGift())) {
+		if (AppConstants.IS_GIFT_YES.equals(order.getIsGift())) {
 			GiftDeliveryRequestDto giftRequest = giftDeliveryRequestMapper.findRequestByOrderId(orderId);
-			if (giftRequest != null && "PENDING".equals(giftRequest.getRequestStatus())) {
+			if (giftRequest != null && AppConstants.GIFT_REQUEST_STATUS_PENDING.equals(giftRequest.getRequestStatus())) {
 				// 배송지 입력 요청을 CANCELLED 상태로 변경 (새로운 상태 필요)
 				// 현재는 스키마에 CANCELLED 상태가 없으므로 스킵
 				log.info("선물 배송지 입력 요청 취소: requestId={}", giftRequest.getRequestId());
@@ -473,6 +462,56 @@ public class OrderService {
 		int result = orderMapper.addOrderItem(orderItem);
 		if (result == 0) {
 			throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "주문 상품 추가 실패");
+		}
+	}
+
+	/**
+	 * 회원 존재 여부 확인
+	 *
+	 * @param memberId 회원 ID
+	 * @return 회원 정보
+	 * @throws BusinessException 회원이 없는 경우
+	 */
+	private MemberDto validateMemberExists(String memberId) {
+		MemberDto member = memberMapper.getMemberById(memberId);
+		if (member == null) {
+			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "memberId=" + memberId);
+		}
+		return member;
+	}
+
+	/**
+	 * 장바구니 아이템들이 선물이 아닌지 검증
+	 *
+	 * @param cartList 장바구니 목록
+	 * @throws BusinessException 선물 상품이 포함된 경우
+	 */
+	private void validateNoGiftItems(List<CartDto> cartList) {
+		boolean hasGiftItem = cartList.stream()
+			.anyMatch(cart -> AppConstants.IS_GIFT_YES.equals(cart.getIsGift()));
+		if (hasGiftItem) {
+			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,
+				"선물 상품은 별도로 주문해야 합니다.");
+		}
+	}
+
+	/**
+	 * 재고 감소 처리
+	 *
+	 * @param cart 장바구니 아이템
+	 * @throws BusinessException 재고 감소 실패 시
+	 */
+	private void decreaseProductStock(CartDto cart) {
+		int stockResult = productMapper.decreaseStock(
+			cart.getProdNum(),
+			cart.getCartQuantity()
+		);
+		if (stockResult == 0) {
+			throw new BusinessException(
+				ErrorCode.INTERNAL_SERVER_ERROR,
+				String.format("재고 감소 실패: prodNum=%d, quantity=%d",
+					cart.getProdNum(), cart.getCartQuantity())
+			);
 		}
 	}
 }
