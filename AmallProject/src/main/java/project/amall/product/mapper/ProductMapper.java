@@ -38,4 +38,24 @@ public interface ProductMapper {
 	 * @return 상품 정보 (없으면 null)
 	 */
 	ProductDto getProductByNum(int prodNum);
+
+	/**
+	 * 재고 차감
+	 *
+	 * @param prodNum 상품 번호
+	 * @param quantity 차감할 수량
+	 * @return 수정된 행 수
+	 */
+	int decreaseStock(@org.apache.ibatis.annotations.Param("prodNum") int prodNum,
+					  @org.apache.ibatis.annotations.Param("quantity") int quantity);
+
+	/**
+	 * 재고 복원
+	 *
+	 * @param prodNum 상품 번호
+	 * @param quantity 복원할 수량
+	 * @return 수정된 행 수
+	 */
+	int increaseStock(@org.apache.ibatis.annotations.Param("prodNum") int prodNum,
+					  @org.apache.ibatis.annotations.Param("quantity") int quantity);
 }

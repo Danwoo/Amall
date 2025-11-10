@@ -138,6 +138,22 @@
 	</select>
 
 	<!-- UPDATE문 -->
+	<update id="decreaseStock">
+		<![CDATA[
+			UPDATE PRODUCT
+			SET PROD_STOCK = PROD_STOCK - #{quantity}
+			WHERE PROD_NUM = #{prodNum}
+			  AND PROD_STOCK >= #{quantity}
+		]]>
+	</update>
+
+	<update id="increaseStock">
+		<![CDATA[
+			UPDATE PRODUCT
+			SET PROD_STOCK = PROD_STOCK + #{quantity}
+			WHERE PROD_NUM = #{prodNum}
+		]]>
+	</update>
 
 	<!-- DELETE문 -->
 

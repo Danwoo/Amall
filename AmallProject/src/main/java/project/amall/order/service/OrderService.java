@@ -39,6 +39,7 @@ public class OrderService {
 	private final ProductMapper productMapper;
 	private final MemberMapper memberMapper;
 	private final GiftDeliveryRequestMapper giftDeliveryRequestMapper;
+	private final project.amall.alarm.service.AlarmService alarmService;
 
 	/**
 	 * 일반 주문 생성
@@ -103,12 +104,23 @@ public class OrderService {
 			throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "주문 생성 실패");
 		}
 
-		// (5) 주문 상품 추가
+		// (5) 재고 차감
+		for (CartDto cart : cartList) {
+			int stockResult = productMapper.decreaseStock(cart.getProdNum(), cart.getCartQuantity());
+			if (stockResult == 0) {
+				throw new BusinessException(
+						ErrorCode.INVALID_INPUT_VALUE,
+						"재고가 부족합니다: " + cart.getProductDto().getProdName()
+				);
+			}
+		}
+
+		// (6) 주문 상품 추가
 		for (CartDto cart : cartList) {
 			addOrderItem(orderId, cart);
 		}
 
-		// (6) 장바구니에서 제거
+		// (7) 장바구니에서 제거
 		for (Integer cartId : cartIds) {
 			cartMapper.removeFromCart(cartId);
 		}
@@ -171,7 +183,16 @@ public class OrderService {
 		int totalAmount = calculateTotalAmount(cartList);
 		int deliveryFee = calculateDeliveryFee(cartList);
 
-		// (6) 주문 생성 (배송지 정보 없음)
+		// (6) 재고 차감
+		int stockResult = productMapper.decreaseStock(cart.getProdNum(), cart.getCartQuantity());
+		if (stockResult == 0) {
+			throw new BusinessException(
+					ErrorCode.INVALID_INPUT_VALUE,
+					"재고가 부족합니다: " + cart.getProductDto().getProdName()
+			);
+		}
+
+		// (7) 주문 생성 (배송지 정보 없음)
 		String orderId = generateOrderId(memberId);
 		OrderDto order = new OrderDto();
 		order.setOrderId(orderId);
@@ -187,10 +208,10 @@ public class OrderService {
 			throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "주문 생성 실패");
 		}
 
-		// (7) 주문 상품 추가
+		// (8) 주문 상품 추가
 		addOrderItem(orderId, cart);
 
-		// (8) 선물 배송지 입력 요청 생성
+		// (9) 선물 배송지 입력 요청 생성
 		GiftDeliveryRequestDto giftRequest = new GiftDeliveryRequestDto();
 		giftRequest.setOrderId(orderId);
 		giftRequest.setToMemberId(cart.getGiftToMemberId());
@@ -200,7 +221,10 @@ public class OrderService {
 
 		giftDeliveryRequestMapper.createGiftDeliveryRequest(giftRequest);
 
-		// (9) 장바구니에서 제거
+		// (10) 선물 알림 생성
+		alarmService.createGiftNotification(orderId, memberId, cart.getGiftToMemberId());
+
+		// (11) 장바구니에서 제거
 		cartMapper.removeFromCart(cartId);
 
 		log.info("선물 주문 생성 완료: orderId={}, toMember={}", orderId, cart.getGiftToMemberId());
@@ -312,6 +336,64 @@ public class OrderService {
 	public List<OrderDto> getGiftOrdersReceived(String memberId) {
 		log.debug("선물 받은 주문 목록 조회: memberId={}", memberId);
 		return orderMapper.findGiftOrdersReceivedByMemberId(memberId);
+	}
+
+	/**
+	 * 주문 취소
+	 *
+	 * @param memberId 회원 ID
+	 * @param orderId 주문 ID
+	 */
+	@Transactional
+	public void cancelOrder(String memberId, String orderId) {
+		log.debug("주문 취소: memberId={}, orderId={}", memberId, orderId);
+
+		// (1) 주문 조회
+		OrderDto order = getOrderWithItems(orderId);
+
+		// (2) 권한 확인
+		if (!memberId.equals(order.getMemberId())) {
+			// 선물 주문의 경우 선물 보낸 사람도 취소 가능
+			if (!"Y".equals(order.getIsGift()) || !memberId.equals(order.getGiftFromMemberId())) {
+				throw new BusinessException(ErrorCode.FORBIDDEN, "주문 취소 권한이 없습니다.");
+			}
+		}
+
+		// (3) 취소 가능 상태 확인 (PENDING, PAID만 취소 가능)
+		if (!OrderDto.OrderStatus.PENDING.getCode().equals(order.getOrderStatus()) &&
+			!OrderDto.OrderStatus.PAID.getCode().equals(order.getOrderStatus())) {
+			throw new BusinessException(
+					ErrorCode.INVALID_INPUT_VALUE,
+					"취소할 수 없는 주문 상태입니다: " + order.getOrderStatus()
+			);
+		}
+
+		// (4) 재고 복원
+		for (OrderItemDto orderItem : order.getOrderItems()) {
+			int result = productMapper.increaseStock(orderItem.getProdNum(), orderItem.getQuantity());
+			if (result == 0) {
+				log.error("재고 복원 실패: prodNum={}, quantity={}", orderItem.getProdNum(), orderItem.getQuantity());
+				throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "재고 복원에 실패했습니다.");
+			}
+		}
+
+		// (5) 주문 상태 변경
+		int result = orderMapper.updateOrderStatus(orderId, OrderDto.OrderStatus.CANCELLED.getCode());
+		if (result == 0) {
+			throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "주문 취소에 실패했습니다.");
+		}
+
+		// (6) 선물 주문인 경우 배송지 입력 요청도 취소 처리
+		if ("Y".equals(order.getIsGift())) {
+			GiftDeliveryRequestDto giftRequest = giftDeliveryRequestMapper.findRequestByOrderId(orderId);
+			if (giftRequest != null && "PENDING".equals(giftRequest.getRequestStatus())) {
+				// 배송지 입력 요청을 CANCELLED 상태로 변경 (새로운 상태 필요)
+				// 현재는 스키마에 CANCELLED 상태가 없으므로 스킵
+				log.info("선물 배송지 입력 요청 취소: requestId={}", giftRequest.getRequestId());
+			}
+		}
+
+		log.info("주문 취소 완료: orderId={}", orderId);
 	}
 
 	// ===== 내부 메서드 =====

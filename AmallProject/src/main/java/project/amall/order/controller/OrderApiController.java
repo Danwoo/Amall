@@ -186,4 +186,25 @@ public class OrderApiController {
 
 		return ResponseEntity.ok(ApiResponse.success("배송지 정보가 업데이트되었습니다."));
 	}
+
+	/**
+	 * 주문 취소
+	 *
+	 * DELETE /api/orders/{orderId}
+	 *
+	 * @param memberId 회원 ID
+	 * @param orderId 주문 ID
+	 * @return 성공 메시지
+	 */
+	@DeleteMapping("/{orderId}")
+	public ResponseEntity<ApiResponse<Void>> cancelOrder(
+			@RequestParam String memberId,
+			@PathVariable String orderId) {
+
+		log.info("주문 취소 API: memberId={}, orderId={}", memberId, orderId);
+
+		orderService.cancelOrder(memberId, orderId);
+
+		return ResponseEntity.ok(ApiResponse.success("주문이 취소되었습니다."));
+	}
 }
