@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.amall.order.mapper.OrderMapper">
+
+	<!-- INSERT문 -->
+	<insert id="createOrder" parameterType="project.amall.order.dto.OrderDto">
+		<![CDATA[
+			INSERT INTO ORDERS
+			(
+				ORDER_ID,
+				ORDER_DATE,
+				ORDER_STATUS,
+				MEMBER_ID,
+				DELIVERY_NAME,
+				DELIVERY_PHONE,
+				DELIVERY_POST_CODE,
+				DELIVERY_ADDRESS,
+				DELIVERY_DETAIL_ADDRESS,
+				DELIVERY_MESSAGE,
+				TOTAL_AMOUNT,
+				DELIVERY_FEE,
+				PAYMENT_METHOD,
+				IS_GIFT,
+				GIFT_FROM_MEMBER_ID,
+				GIFT_MESSAGE
+			)
+			VALUES
+			(
+				#{orderId},
+				SYSDATE,
+				NVL(#{orderStatus}, 'PENDING'),
+				#{memberId},
+				#{deliveryName},
+				#{deliveryPhone},
+				#{deliveryPostCode},
+				#{deliveryAddress},
+				#{deliveryDetailAddress},
+				#{deliveryMessage},
+				#{totalAmount},
+				NVL(#{deliveryFee}, 0),
+				#{paymentMethod},
+				NVL(#{isGift}, 'N'),
+				#{giftFromMemberId},
+				#{giftMessage}
+			)
+		]]>
+	</insert>
+
+	<insert id="addOrderItem" parameterType="project.amall.order.dto.OrderItemDto">
+		<![CDATA[
+			INSERT INTO ORDER_ITEM
+			(
+				ORDER_ITEM_ID,
+				ORDER_ID,
+				PROD_NUM,
+				PROD_NAME,
+				PROD_PRICE,
+				QUANTITY
+			)
+			VALUES
+			(
+				SEQ_ORDER_ITEM.NEXTVAL,
+				#{orderId},
+				#{prodNum},
+				#{prodName},
+				#{prodPrice},
+				#{quantity}
+			)
+		]]>
+	</insert>
+
+	<!-- SELECT문 -->
+	<select id="findOrderById" parameterType="String" resultType="project.amall.order.dto.OrderDto">
+		<![CDATA[
+			SELECT ORDER_ID AS orderId,
+				   ORDER_DATE AS orderDate,
+				   ORDER_STATUS AS orderStatus,
+				   MEMBER_ID AS memberId,
+				   DELIVERY_NAME AS deliveryName,
+				   DELIVERY_PHONE AS deliveryPhone,
+				   DELIVERY_POST_CODE AS deliveryPostCode,
+				   DELIVERY_ADDRESS AS deliveryAddress,
+				   DELIVERY_DETAIL_ADDRESS AS deliveryDetailAddress,
+				   DELIVERY_MESSAGE AS deliveryMessage,
+				   TOTAL_AMOUNT AS totalAmount,
+				   DELIVERY_FEE AS deliveryFee,
+				   PAYMENT_METHOD AS paymentMethod,
+				   IS_GIFT AS isGift,
+				   GIFT_FROM_MEMBER_ID AS giftFromMemberId,
+				   GIFT_MESSAGE AS giftMessage
+			FROM ORDERS
+			WHERE ORDER_ID = #{orderId}
+		]]>
+	</select>
+
+	<select id="findOrderItemsByOrderId" parameterType="String" resultType="project.amall.order.dto.OrderItemDto">
+		<![CDATA[
+			SELECT ORDER_ITEM_ID AS orderItemId,
+				   ORDER_ID AS orderId,
+				   PROD_NUM AS prodNum,
+				   PROD_NAME AS prodName,
+				   PROD_PRICE AS prodPrice,
+				   QUANTITY AS quantity
+			FROM ORDER_ITEM
+			WHERE ORDER_ID = #{orderId}
+			ORDER BY ORDER_ITEM_ID
+		]]>
+	</select>
+
+	<select id="findOrdersByMemberId" parameterType="String" resultType="project.amall.order.dto.OrderDto">
+		<![CDATA[
+			SELECT ORDER_ID AS orderId,
+				   ORDER_DATE AS orderDate,
+				   ORDER_STATUS AS orderStatus,
+				   MEMBER_ID AS memberId,
+				   DELIVERY_NAME AS deliveryName,
+				   DELIVERY_PHONE AS deliveryPhone,
+				   DELIVERY_POST_CODE AS deliveryPostCode,
+				   DELIVERY_ADDRESS AS deliveryAddress,
+				   DELIVERY_DETAIL_ADDRESS AS deliveryDetailAddress,
+				   DELIVERY_MESSAGE AS deliveryMessage,
+				   TOTAL_AMOUNT AS totalAmount,
+				   DELIVERY_FEE AS deliveryFee,
+				   PAYMENT_METHOD AS paymentMethod,
+				   IS_GIFT AS isGift,
+				   GIFT_FROM_MEMBER_ID AS giftFromMemberId,
+				   GIFT_MESSAGE AS giftMessage
+			FROM ORDERS
+			WHERE MEMBER_ID = #{memberId}
+			ORDER BY ORDER_DATE DESC
+		]]>
+	</select>
+
+	<select id="findGiftOrdersReceivedByMemberId" parameterType="String" resultType="project.amall.order.dto.OrderDto">
+		<![CDATA[
+			SELECT ORDER_ID AS orderId,
+				   ORDER_DATE AS orderDate,
+				   ORDER_STATUS AS orderStatus,
+				   MEMBER_ID AS memberId,
+				   DELIVERY_NAME AS deliveryName,
+				   DELIVERY_PHONE AS deliveryPhone,
+				   DELIVERY_POST_CODE AS deliveryPostCode,
+				   DELIVERY_ADDRESS AS deliveryAddress,
+				   DELIVERY_DETAIL_ADDRESS AS deliveryDetailAddress,
+				   DELIVERY_MESSAGE AS deliveryMessage,
+				   TOTAL_AMOUNT AS totalAmount,
+				   DELIVERY_FEE AS deliveryFee,
+				   PAYMENT_METHOD AS paymentMethod,
+				   IS_GIFT AS isGift,
+				   GIFT_FROM_MEMBER_ID AS giftFromMemberId,
+				   GIFT_MESSAGE AS giftMessage
+			FROM ORDERS
+			WHERE IS_GIFT = 'Y'
+			  AND MEMBER_ID = #{memberId}
+			ORDER BY ORDER_DATE DESC
+		]]>
+	</select>
+
+	<!-- UPDATE문 -->
+	<update id="updateOrderStatus">
+		<![CDATA[
+			UPDATE ORDERS
+			SET ORDER_STATUS = #{status}
+			WHERE ORDER_ID = #{orderId}
+		]]>
+	</update>
+
+	<update id="updateDeliveryInfo" parameterType="project.amall.order.dto.OrderDto">
+		<![CDATA[
+			UPDATE ORDERS
+			SET DELIVERY_NAME = #{deliveryName},
+				DELIVERY_PHONE = #{deliveryPhone},
+				DELIVERY_POST_CODE = #{deliveryPostCode},
+				DELIVERY_ADDRESS = #{deliveryAddress},
+				DELIVERY_DETAIL_ADDRESS = #{deliveryDetailAddress},
+				DELIVERY_MESSAGE = #{deliveryMessage}
+			WHERE ORDER_ID = #{orderId}
+		]]>
+	</update>
+
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="project.amall.gift.mapper.GiftDeliveryRequestMapper">
+
+	<!-- INSERT문 -->
+	<insert id="createGiftDeliveryRequest" parameterType="project.amall.gift.dto.GiftDeliveryRequestDto">
+		<![CDATA[
+			INSERT INTO GIFT_DELIVERY_REQUEST
+			(
+				REQUEST_ID,
+				ORDER_ID,
+				TO_MEMBER_ID,
+				FROM_MEMBER_ID,
+				GIFT_MESSAGE,
+				REQUEST_STATUS,
+				CREATED_DATE
+			)
+			VALUES
+			(
+				SEQ_GIFT_DELIVERY_REQUEST.NEXTVAL,
+				#{orderId},
+				#{toMemberId},
+				#{fromMemberId},
+				#{giftMessage},
+				'PENDING',
+				SYSDATE
+			)
+		]]>
+	</insert>
+
+	<!-- SELECT문 -->
+	<select id="findRequestById" parameterType="int" resultType="project.amall.gift.dto.GiftDeliveryRequestDto">
+		<![CDATA[
+			SELECT REQUEST_ID AS requestId,
+				   ORDER_ID AS orderId,
+				   TO_MEMBER_ID AS toMemberId,
+				   FROM_MEMBER_ID AS fromMemberId,
+				   GIFT_MESSAGE AS giftMessage,
+				   REQUEST_STATUS AS requestStatus,
+				   CREATED_DATE AS createdDate,
+				   COMPLETED_DATE AS completedDate
+			FROM GIFT_DELIVERY_REQUEST
+			WHERE REQUEST_ID = #{requestId}
+		]]>
+	</select>
+
+	<select id="findRequestByOrderId" parameterType="String" resultType="project.amall.gift.dto.GiftDeliveryRequestDto">
+		<![CDATA[
+			SELECT REQUEST_ID AS requestId,
+				   ORDER_ID AS orderId,
+				   TO_MEMBER_ID AS toMemberId,
+				   FROM_MEMBER_ID AS fromMemberId,
+				   GIFT_MESSAGE AS giftMessage,
+				   REQUEST_STATUS AS requestStatus,
+				   CREATED_DATE AS createdDate,
+				   COMPLETED_DATE AS completedDate
+			FROM GIFT_DELIVERY_REQUEST
+			WHERE ORDER_ID = #{orderId}
+		]]>
+	</select>
+
+	<select id="findPendingRequestsByMemberId" parameterType="String" resultType="project.amall.gift.dto.GiftDeliveryRequestDto">
+		<![CDATA[
+			SELECT REQUEST_ID AS requestId,
+				   ORDER_ID AS orderId,
+				   TO_MEMBER_ID AS toMemberId,
+				   FROM_MEMBER_ID AS fromMemberId,
+				   GIFT_MESSAGE AS giftMessage,
+				   REQUEST_STATUS AS requestStatus,
+				   CREATED_DATE AS createdDate,
+				   COMPLETED_DATE AS completedDate
+			FROM GIFT_DELIVERY_REQUEST
+			WHERE TO_MEMBER_ID = #{toMemberId}
+			  AND REQUEST_STATUS = 'PENDING'
+			ORDER BY CREATED_DATE DESC
+		]]>
+	</select>
+
+	<!-- UPDATE문 -->
+	<update id="updateRequestStatus">
+		<![CDATA[
+			UPDATE GIFT_DELIVERY_REQUEST
+			SET REQUEST_STATUS = #{status},
+				COMPLETED_DATE = CASE WHEN #{status} = 'COMPLETED' THEN SYSDATE ELSE COMPLETED_DATE END
+			WHERE REQUEST_ID = #{requestId}
+		]]>
+	</update>
+
+</mapper>

@@ -282,16 +282,36 @@ async function deleteSelectedItems() {
  *
  * @param {number} cartId - 장바구니 ID
  */
-function orderSingleItem(cartId) {
-	// TODO: 주문 페이지로 이동 (Option 2에서 구현)
-	showToast('주문 기능은 곧 구현됩니다.', 'info');
-	console.log('주문 cartId:', cartId);
+async function orderSingleItem(cartId) {
+	const memberId = getMemberIdFromPage();
+
+	if (!memberId) {
+		showToast('로그인이 필요합니다.', 'error');
+		return;
+	}
+
+	// 장바구니 아이템 정보 조회
+	const cartList = await getCart(memberId);
+	const cartItem = cartList.find(item => item.cartId === cartId);
+
+	if (!cartItem) {
+		showToast('장바구니 정보를 찾을 수 없습니다.', 'error');
+		return;
+	}
+
+	// 선물 상품인 경우
+	if (cartItem.isGift === 'Y') {
+		await orderGiftItem(memberId, cartId);
+	} else {
+		// 일반 상품인 경우 - 배송지 입력 모달 표시
+		showDeliveryInfoModal([cartId]);
+	}
 }
 
 /**
  * 선택한 아이템 주문
  */
-function orderSelectedItems() {
+async function orderSelectedItems() {
 	const selectedCheckboxes = document.querySelectorAll('.chk:checked');
 
 	if (selectedCheckboxes.length === 0) {
@@ -299,13 +319,117 @@ function orderSelectedItems() {
 		return;
 	}
 
-	// TODO: 주문 페이지로 이동 (Option 2에서 구현)
-	showToast('주문 기능은 곧 구현됩니다.', 'info');
+	const memberId = getMemberIdFromPage();
+
+	if (!memberId) {
+		showToast('로그인이 필요합니다.', 'error');
+		return;
+	}
 
 	const cartIds = Array.from(selectedCheckboxes).map(cb =>
 		parseInt(cb.getAttribute('data-cart-id'))
 	);
-	console.log('주문 cartIds:', cartIds);
+
+	// 선물 상품이 포함되어 있는지 확인
+	const cartList = await getCart(memberId);
+	const selectedItems = cartList.filter(item => cartIds.includes(item.cartId));
+	const hasGiftItem = selectedItems.some(item => item.isGift === 'Y');
+
+	if (hasGiftItem) {
+		showToast('선물 상품은 개별로만 주문 가능합니다.', 'error');
+		return;
+	}
+
+	// 일반 상품들 주문 - 배송지 입력 모달 표시
+	showDeliveryInfoModal(cartIds);
+}
+
+/**
+ * 선물 상품 주문
+ *
+ * @param {string} memberId - 회원 ID
+ * @param {number} cartId - 장바구니 ID
+ */
+async function orderGiftItem(memberId, cartId) {
+	const confirmed = await confirm('선물을 주문하시겠습니까?\n선물 받는 사람이 배송지를 입력해야 배송이 시작됩니다.');
+
+	if (!confirmed) {
+		return;
+	}
+
+	// 간단한 결제 방법 선택 (실제로는 결제 모달 필요)
+	const paymentMethod = 'CARD'; // 임시 하드코딩
+
+	const orderId = await createGiftOrder(memberId, cartId, '선물입니다!', paymentMethod);
+
+	if (orderId) {
+		showToast('선물 주문이 완료되었습니다! 선물 받는 사람이 배송지를 입력하면 배송이 시작됩니다.', 'success');
+
+		// 장바구니 새로고침
+		await loadCart();
+	}
+}
+
+/**
+ * 배송지 입력 모달 표시
+ *
+ * @param {Array<number>} cartIds - 장바구니 ID 목록
+ */
+function showDeliveryInfoModal(cartIds) {
+	// 간단한 프롬프트로 임시 구현 (실제로는 모달 필요)
+	const deliveryName = prompt('받는 사람 이름을 입력해주세요:');
+	if (!deliveryName) return;
+
+	const deliveryPhone = prompt('받는 사람 전화번호를 입력해주세요:');
+	if (!deliveryPhone) return;
+
+	const deliveryPostCode = prompt('우편번호를 입력해주세요:');
+	if (!deliveryPostCode) return;
+
+	const deliveryAddress = prompt('주소를 입력해주세요:');
+	if (!deliveryAddress) return;
+
+	const deliveryDetailAddress = prompt('상세주소를 입력해주세요 (선택):') || '';
+	const deliveryMessage = prompt('배송 메시지를 입력해주세요 (선택):') || '';
+
+	const deliveryInfo = {
+		name: deliveryName,
+		phone: deliveryPhone,
+		postCode: deliveryPostCode,
+		address: deliveryAddress,
+		detailAddress: deliveryDetailAddress,
+		message: deliveryMessage
+	};
+
+	// 주문 생성
+	processOrder(cartIds, deliveryInfo);
+}
+
+/**
+ * 주문 처리
+ *
+ * @param {Array<number>} cartIds - 장바구니 ID 목록
+ * @param {Object} deliveryInfo - 배송 정보
+ */
+async function processOrder(cartIds, deliveryInfo) {
+	const memberId = getMemberIdFromPage();
+
+	if (!memberId) {
+		showToast('로그인이 필요합니다.', 'error');
+		return;
+	}
+
+	// 간단한 결제 방법 선택 (실제로는 결제 모달 필요)
+	const paymentMethod = 'CARD'; // 임시 하드코딩
+
+	const orderId = await createOrder(memberId, cartIds, deliveryInfo, paymentMethod);
+
+	if (orderId) {
+		showToast('주문이 완료되었습니다!', 'success');
+
+		// 장바구니 새로고침
+		await loadCart();
+	}
 }
 
 /**

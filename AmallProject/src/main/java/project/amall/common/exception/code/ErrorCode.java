@@ -43,11 +43,15 @@ public enum ErrorCode {
     // Alarm (6xxx)
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "A001", "알림을 찾을 수 없습니다."),
 
-    // Authentication & Authorization (7xxx)
+    // Order (7xxx)
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "O001", "주문을 찾을 수 없습니다."),
+
+    // Authentication & Authorization (8xxx)
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AU001", "인증이 필요합니다."),
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "AU002", "로그인에 실패했습니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AU003", "토큰이 만료되었습니다."),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "AU004", "유효하지 않은 토큰입니다.");
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "AU004", "유효하지 않은 토큰입니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "AU005", "권한이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
