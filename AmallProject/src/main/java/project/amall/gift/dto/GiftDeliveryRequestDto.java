@@ -1,6 +1,7 @@
 package project.amall.gift.dto;
 
 import lombok.Data;
+import project.amall.common.constants.AppConstants;
 
 import java.time.LocalDateTime;
 
@@ -27,8 +28,8 @@ public class GiftDeliveryRequestDto {
 	 * 요청 상태 Enum
 	 */
 	public enum RequestStatus {
-		PENDING("PENDING", "배송지 입력 대기"),
-		COMPLETED("COMPLETED", "배송지 입력 완료");
+		PENDING(AppConstants.GIFT_REQUEST_STATUS_PENDING, "배송지 입력 대기"),
+		COMPLETED(AppConstants.GIFT_REQUEST_STATUS_COMPLETED, "배송지 입력 완료");
 
 		private final String code;
 		private final String description;
@@ -51,6 +52,6 @@ public class GiftDeliveryRequestDto {
 	 * 완료 여부 확인
 	 */
 	public boolean isCompleted() {
-		return "COMPLETED".equals(this.requestStatus);
+		return AppConstants.GIFT_REQUEST_STATUS_COMPLETED.equals(this.requestStatus);
 	}
 }
