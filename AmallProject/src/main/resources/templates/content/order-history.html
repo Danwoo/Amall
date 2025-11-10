@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout/defaultLayout}"
+	layout:fragment="Content">
+<head>
+<title>Order History</title>
+
+<!-- inline CSS 영역-->
+<style type="text/css">
+.content {
+	width: 960px;
+	margin: auto;
+}
+
+.order-history-container {
+	padding: 40px 20px;
+}
+
+.order-history-container h2 {
+	font-size: 28px;
+	font-weight: 600;
+	margin-bottom: 30px;
+	color: #333;
+}
+
+/* Tab Navigation */
+.order-tabs {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 30px;
+	border-bottom: 2px solid #e5e7eb;
+}
+
+.order-tab {
+	padding: 12px 24px;
+	font-size: 16px;
+	font-weight: 500;
+	color: #6b7280;
+	background: none;
+	border: none;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	transition: all 0.3s;
+}
+
+.order-tab.active {
+	color: #3b82f6;
+	border-bottom-color: #3b82f6;
+}
+
+.order-tab:hover {
+	color: #3b82f6;
+}
+
+/* Tab Content */
+.tab-content {
+	display: none;
+}
+
+.tab-content.active {
+	display: block;
+}
+
+/* Order List */
+.order-list {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.order-card {
+	background: white;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	padding: 24px;
+	transition: box-shadow 0.3s;
+}
+
+.order-card:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 16px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #f3f4f6;
+}
+
+.order-id {
+	font-size: 14px;
+	font-weight: 600;
+	color: #374151;
+}
+
+.order-date {
+	font-size: 12px;
+	color: #9ca3af;
+}
+
+.order-status {
+	display: inline-block;
+	padding: 6px 12px;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 6px;
+	text-transform: uppercase;
+}
+
+.order-status.PENDING {
+	background-color: #fef3c7;
+	color: #f59e0b;
+}
+
+.order-status.PAID {
+	background-color: #dbeafe;
+	color: #3b82f6;
+}
+
+.order-status.SHIPPED {
+	background-color: #e9d5ff;
+	color: #a855f7;
+}
+
+.order-status.DELIVERED {
+	background-color: #d1fae5;
+	color: #10b981;
+}
+
+.order-status.CANCELLED {
+	background-color: #fee2e2;
+	color: #ef4444;
+}
+
+.gift-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 10px;
+	background-color: #fef3c7;
+	color: #f59e0b;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 6px;
+	margin-left: 8px;
+}
+
+.order-body {
+	margin-bottom: 16px;
+}
+
+.order-items {
+	margin-bottom: 12px;
+}
+
+.order-item {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0;
+	font-size: 14px;
+	color: #4b5563;
+}
+
+.order-item-name {
+	font-weight: 500;
+	color: #374151;
+}
+
+.order-item-quantity {
+	color: #6b7280;
+	margin-left: 4px;
+}
+
+.order-item-price {
+	font-weight: 500;
+	color: #374151;
+}
+
+.order-summary {
+	display: flex;
+	justify-content: space-between;
+	padding-top: 12px;
+	border-top: 1px solid #f3f4f6;
+	margin-top: 12px;
+}
+
+.order-total {
+	font-size: 16px;
+	font-weight: 600;
+	color: #374151;
+}
+
+.order-total-amount {
+	font-size: 18px;
+	font-weight: 700;
+	color: #3b82f6;
+}
+
+.order-delivery {
+	margin-top: 12px;
+	padding: 12px;
+	background-color: #f9fafb;
+	border-radius: 8px;
+	font-size: 13px;
+	color: #6b7280;
+}
+
+.order-delivery-label {
+	font-weight: 600;
+	color: #374151;
+	margin-bottom: 4px;
+}
+
+.order-footer {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+}
+
+.btn {
+	padding: 10px 20px;
+	font-size: 14px;
+	font-weight: 500;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.btn-primary {
+	background-color: #3b82f6;
+	color: white;
+}
+
+.btn-primary:hover {
+	background-color: #2563eb;
+}
+
+.btn-outline {
+	background-color: white;
+	color: #6b7280;
+	border: 1px solid #d1d5db;
+}
+
+.btn-outline:hover {
+	background-color: #f9fafb;
+	border-color: #9ca3af;
+}
+
+.btn-danger {
+	background-color: #ef4444;
+	color: white;
+}
+
+.btn-danger:hover {
+	background-color: #dc2626;
+}
+
+/* Empty State */
+.empty-state {
+	text-align: center;
+	padding: 80px 20px;
+	color: #9ca3af;
+}
+
+.empty-state-icon {
+	font-size: 64px;
+	margin-bottom: 16px;
+}
+
+.empty-state-title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #6b7280;
+	margin-bottom: 8px;
+}
+
+.empty-state-text {
+	font-size: 14px;
+	color: #9ca3af;
+}
+
+/* Loading State */
+.loading-state {
+	text-align: center;
+	padding: 80px 20px;
+	color: #9ca3af;
+}
+
+/* Order Detail Modal */
+.order-detail-modal {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.order-detail-content {
+	background-color: white;
+	margin: 5% auto;
+	padding: 30px;
+	border-radius: 12px;
+	width: 600px;
+	max-width: 90%;
+	max-height: 80vh;
+	overflow-y: auto;
+}
+
+.order-detail-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 24px;
+	padding-bottom: 16px;
+	border-bottom: 2px solid #e5e7eb;
+}
+
+.order-detail-title {
+	font-size: 22px;
+	font-weight: 600;
+	color: #374151;
+}
+
+.order-detail-close {
+	font-size: 28px;
+	font-weight: bold;
+	color: #9ca3af;
+	cursor: pointer;
+	transition: color 0.3s;
+}
+
+.order-detail-close:hover {
+	color: #374151;
+}
+
+.order-detail-section {
+	margin-bottom: 24px;
+}
+
+.order-detail-section-title {
+	font-size: 14px;
+	font-weight: 600;
+	color: #6b7280;
+	text-transform: uppercase;
+	margin-bottom: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.content {
+		width: 100%;
+		padding: 0 16px;
+	}
+
+	.order-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+	}
+
+	.order-footer {
+		flex-direction: column;
+	}
+
+	.btn {
+		width: 100%;
+	}
+
+	.order-detail-content {
+		width: 95%;
+		padding: 20px;
+	}
+}
+</style>
+
+<!-- inline JS 영역-->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/order-history-handler.js}"></script>
+
+<!-- 회원 ID 주입 (JavaScript에서 사용) -->
+<meta name="member-id" th:content="${#authentication.name}" sec:authorize="isAuthenticated()">
+</head>
+
+<body>
+	<div layout:fragment="content" class="content">
+		<div class="order-history-container">
+			<!-- Header -->
+			<h2>주문 내역</h2>
+
+			<!-- Tabs -->
+			<div class="order-tabs">
+				<button class="order-tab active" data-tab="my-orders">
+					내 주문
+				</button>
+				<button class="order-tab" data-tab="received-gifts">
+					받은 선물
+				</button>
+			</div>
+
+			<!-- Tab Content: My Orders -->
+			<div id="my-orders" class="tab-content active">
+				<div class="order-list">
+					<!-- Orders will be dynamically loaded here -->
+					<div class="loading-state">
+						<p>주문 내역을 불러오는 중...</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Tab Content: Received Gifts -->
+			<div id="received-gifts" class="tab-content">
+				<div class="order-list">
+					<!-- Received gifts will be dynamically loaded here -->
+					<div class="loading-state">
+						<p>받은 선물을 불러오는 중...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Order Detail Modal -->
+		<div id="orderDetailModal" class="order-detail-modal">
+			<div class="order-detail-content">
+				<div class="order-detail-header">
+					<h3 class="order-detail-title">주문 상세</h3>
+					<span class="order-detail-close">&times;</span>
+				</div>
+				<div id="orderDetailBody">
+					<!-- Order details will be loaded here -->
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
