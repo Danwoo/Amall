@@ -62,4 +62,12 @@ public interface CartMapper {
 	 * @return 장바구니 정보 (없으면 null)
 	 */
 	CartDto findByMemberAndProduct(@Param("memberId") String memberId, @Param("prodNum") int prodNum);
+
+	/**
+	 * 장바구니 아이템의 선물 정보 업데이트
+	 *
+	 * @param cartDto 선물 정보가 포함된 장바구니 DTO
+	 * @return 수정된 행 수
+	 */
+	int updateGiftInfo(CartDto cartDto);
 }

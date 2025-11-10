@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import project.amall.common.exception.BusinessException;
 import project.amall.common.exception.code.ErrorCode;
+import project.amall.member.dto.MemberDto;
+import project.amall.member.mapper.MemberMapper;
 import project.amall.product.dto.ProductDto;
 import project.amall.product.mapper.ProductMapper;
 import project.amall.wishlist.dto.WishListDto;
@@ -27,6 +29,7 @@ public class WishListService {
 
 	private final WishListMapper wishListMapper;
 	private final ProductMapper productMapper;
+	private final MemberMapper memberMapper;
 
 	/**
 	 * 회원의 위시리스트 조회
@@ -125,6 +128,50 @@ public class WishListService {
 		log.debug("위시리스트 포함 여부 확인: memberId={}, prodNum={}", memberId, prodNum);
 		WishListDto wishList = wishListMapper.findByMemberAndProduct(memberId, prodNum);
 		return wishList != null;
+	}
+
+	/**
+	 * 커플 상대방의 위시리스트 조회 (선물 쇼핑용)
+	 *
+	 * Phase 9-3: 선물 기능
+	 *
+	 * @param memberId 내 회원 ID
+	 * @return 상대방의 위시리스트
+	 */
+	public List<ProductDto> showPartnerWishList(String memberId) {
+		log.debug("커플 위시리스트 조회: memberId={}", memberId);
+
+		// (1) 내 정보 조회
+		MemberDto member = memberMapper.reloadMemberData(memberId);
+		if (member == null) {
+			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "memberId=" + memberId);
+		}
+
+		// (2) 매칭된 상대방 ID 확인
+		String partnerMemberId = member.getMemberMatchId();
+		if (partnerMemberId == null || partnerMemberId.trim().isEmpty()) {
+			throw new BusinessException(
+					ErrorCode.INVALID_INPUT_VALUE,
+					"매칭된 상대방이 없습니다. 커플 매칭을 먼저 진행해주세요."
+			);
+		}
+
+		// (3) 상대방 존재 확인
+		MemberDto partnerMember = memberMapper.reloadMemberData(partnerMemberId);
+		if (partnerMember == null) {
+			throw new BusinessException(
+					ErrorCode.MEMBER_NOT_FOUND,
+					"매칭된 상대방을 찾을 수 없습니다: partnerMemberId=" + partnerMemberId
+			);
+		}
+
+		// (4) 상대방의 위시리스트 조회
+		List<ProductDto> partnerWishList = wishListMapper.showThisIdWishList(partnerMemberId);
+
+		log.info("커플 위시리스트 조회 성공: memberId={}, partnerId={}, 위시리스트 개수={}",
+				memberId, partnerMemberId, partnerWishList.size());
+
+		return partnerWishList;
 	}
 
 	// ========== Private Helper Methods ==========
