@@ -357,8 +357,19 @@ async function orderGiftItem(memberId, cartId) {
 		return;
 	}
 
-	// 간단한 결제 방법 선택 (실제로는 결제 모달 필요)
-	const paymentMethod = 'CARD'; // 임시 하드코딩
+	// 결제 수단 선택
+	let paymentMethod;
+	try {
+		paymentMethod = await showPaymentModal();
+		if (!paymentMethod) {
+			// 사용자가 취소한 경우
+			return;
+		}
+	} catch (error) {
+		// 모달이 취소되거나 에러가 발생한 경우
+		console.log('결제 수단 선택이 취소되었습니다.');
+		return;
+	}
 
 	const orderId = await createGiftOrder(memberId, cartId, '선물입니다!', paymentMethod);
 
@@ -408,8 +419,19 @@ async function processOrder(cartIds, deliveryInfo) {
 		return;
 	}
 
-	// 간단한 결제 방법 선택 (실제로는 결제 모달 필요)
-	const paymentMethod = 'CARD'; // 임시 하드코딩
+	// 결제 수단 선택
+	let paymentMethod;
+	try {
+		paymentMethod = await showPaymentModal();
+		if (!paymentMethod) {
+			// 사용자가 취소한 경우
+			return;
+		}
+	} catch (error) {
+		// 모달이 취소되거나 에러가 발생한 경우
+		console.log('결제 수단 선택이 취소되었습니다.');
+		return;
+	}
 
 	const orderId = await createOrder(memberId, cartIds, deliveryInfo, paymentMethod);
 
