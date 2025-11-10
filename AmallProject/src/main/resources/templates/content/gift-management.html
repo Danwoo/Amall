@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<!-- Default Layout Import-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layout/defaultLayout}"
+	layout:fragment="Content">
+<head>
+<title>Gift Management</title>
+
+<!-- inline CSS 영역-->
+<style type="text/css">
+.content {
+	width: 960px;
+	margin: auto;
+}
+
+.gift-management-container {
+	padding: 40px 20px;
+}
+
+.gift-management-container h2 {
+	font-size: 28px;
+	font-weight: 600;
+	margin-bottom: 30px;
+	color: #333;
+}
+
+/* Tab Navigation */
+.gift-tabs {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 30px;
+	border-bottom: 2px solid #e5e7eb;
+}
+
+.gift-tab {
+	padding: 12px 24px;
+	font-size: 16px;
+	font-weight: 500;
+	color: #6b7280;
+	background: none;
+	border: none;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	transition: all 0.3s;
+}
+
+.gift-tab.active {
+	color: #f59e0b;
+	border-bottom-color: #f59e0b;
+}
+
+.gift-tab:hover {
+	color: #f59e0b;
+}
+
+/* Tab Content */
+.tab-content {
+	display: none;
+}
+
+.tab-content.active {
+	display: block;
+}
+
+/* Gift List */
+.gift-list {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+/* Gift Card */
+.gift-card {
+	background: white;
+	border: 2px solid #fbbf24;
+	border-radius: 12px;
+	padding: 24px;
+	transition: all 0.3s;
+	position: relative;
+	overflow: hidden;
+}
+
+.gift-card::before {
+	content: '🎁';
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	font-size: 100px;
+	opacity: 0.05;
+	transform: rotate(15deg);
+}
+
+.gift-card:hover {
+	box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
+	transform: translateY(-2px);
+}
+
+.gift-card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 16px;
+	padding-bottom: 12px;
+	border-bottom: 2px solid #fef3c7;
+}
+
+.gift-card-title {
+	font-size: 20px;
+	font-weight: 700;
+	color: #f59e0b;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.gift-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 6px 12px;
+	background-color: #fef3c7;
+	color: #f59e0b;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 6px;
+}
+
+.gift-status-badge {
+	display: inline-block;
+	padding: 6px 12px;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 6px;
+	text-transform: uppercase;
+}
+
+.gift-status-badge.PENDING {
+	background-color: #fef3c7;
+	color: #f59e0b;
+}
+
+.gift-status-badge.COMPLETED {
+	background-color: #d1fae5;
+	color: #10b981;
+}
+
+.gift-card-body {
+	margin-bottom: 16px;
+}
+
+.gift-info {
+	margin-bottom: 12px;
+}
+
+.gift-info-label {
+	display: inline-block;
+	font-size: 13px;
+	font-weight: 600;
+	color: #6b7280;
+	min-width: 80px;
+	margin-right: 8px;
+}
+
+.gift-info-value {
+	font-size: 14px;
+	color: #374151;
+}
+
+.gift-message-box {
+	background-color: #fffbeb;
+	border-left: 4px solid #fbbf24;
+	padding: 12px 16px;
+	margin: 12px 0;
+	border-radius: 6px;
+}
+
+.gift-message-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #f59e0b;
+	margin-bottom: 4px;
+}
+
+.gift-message-text {
+	font-size: 14px;
+	color: #78350f;
+	font-style: italic;
+	line-height: 1.5;
+}
+
+.gift-product-info {
+	background-color: #f9fafb;
+	padding: 12px;
+	border-radius: 8px;
+	margin: 12px 0;
+}
+
+.gift-product-name {
+	font-size: 15px;
+	font-weight: 600;
+	color: #374151;
+	margin-bottom: 4px;
+}
+
+.gift-product-quantity {
+	font-size: 13px;
+	color: #6b7280;
+}
+
+.gift-delivery-info {
+	background-color: #f0fdf4;
+	border: 1px solid #86efac;
+	padding: 12px;
+	border-radius: 8px;
+	margin: 12px 0;
+}
+
+.gift-delivery-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #10b981;
+	margin-bottom: 8px;
+}
+
+.gift-delivery-text {
+	font-size: 13px;
+	color: #166534;
+	line-height: 1.6;
+}
+
+.gift-card-footer {
+	display: flex;
+	gap: 10px;
+	justify-content: flex-end;
+}
+
+.btn {
+	padding: 10px 20px;
+	font-size: 14px;
+	font-weight: 500;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.btn-gift-primary {
+	background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+	color: white;
+	box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+}
+
+.btn-gift-primary:hover {
+	background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+	box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+	transform: translateY(-1px);
+}
+
+.btn-outline {
+	background-color: white;
+	color: #6b7280;
+	border: 1px solid #d1d5db;
+}
+
+.btn-outline:hover {
+	background-color: #f9fafb;
+	border-color: #9ca3af;
+}
+
+/* Empty State */
+.empty-state {
+	text-align: center;
+	padding: 80px 20px;
+	color: #9ca3af;
+}
+
+.empty-state-icon {
+	font-size: 64px;
+	margin-bottom: 16px;
+}
+
+.empty-state-title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #6b7280;
+	margin-bottom: 8px;
+}
+
+.empty-state-text {
+	font-size: 14px;
+	color: #9ca3af;
+}
+
+/* Loading State */
+.loading-state {
+	text-align: center;
+	padding: 80px 20px;
+	color: #9ca3af;
+}
+
+.loading-spinner {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	border: 4px solid #f3f4f6;
+	border-top: 4px solid #fbbf24;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+	margin-bottom: 16px;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.content {
+		width: 100%;
+		padding: 0 16px;
+	}
+
+	.gift-card-header {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.gift-card-footer {
+		flex-direction: column;
+	}
+
+	.btn {
+		width: 100%;
+	}
+
+	.gift-info-label {
+		display: block;
+		margin-bottom: 4px;
+	}
+}
+</style>
+
+<!-- Daum Postcode API (주소 검색용) -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<!-- 의존성 스크립트 -->
+<script th:src="@{/js/api/api-client.js}"></script>
+<script th:src="@{/js/api/order-api.js}"></script>
+<script th:src="@{/js/utils/ui-utils.js}"></script>
+<script th:src="@{/js/components/delivery-modal.js}"></script>
+
+<!-- 페이지 핸들러 -->
+<script th:src="@{/js/gift-management-handler.js}"></script>
+
+<!-- 회원 ID 주입 (JavaScript에서 사용) -->
+<meta name="member-id" th:content="${#authentication.name}" sec:authorize="isAuthenticated()">
+</head>
+
+<body>
+	<div layout:fragment="content" class="content">
+		<div class="gift-management-container">
+			<!-- Header -->
+			<h2>🎁 선물 관리</h2>
+
+			<!-- Tabs -->
+			<div class="gift-tabs">
+				<button class="gift-tab active" data-tab="pending-gifts">
+					배송지 입력 필요
+				</button>
+				<button class="gift-tab" data-tab="completed-gifts">
+					완료된 선물
+				</button>
+			</div>
+
+			<!-- Tab Content: Pending Gifts -->
+			<div id="pending-gifts" class="tab-content active">
+				<div class="gift-list">
+					<!-- Pending gifts will be dynamically loaded here -->
+					<div class="loading-state">
+						<div class="loading-spinner"></div>
+						<p>배송지 입력이 필요한 선물을 불러오는 중...</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Tab Content: Completed Gifts -->
+			<div id="completed-gifts" class="tab-content">
+				<div class="gift-list">
+					<!-- Completed gifts will be dynamically loaded here -->
+					<div class="loading-state">
+						<div class="loading-spinner"></div>
+						<p>완료된 선물을 불러오는 중...</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
