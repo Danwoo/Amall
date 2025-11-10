@@ -375,34 +375,23 @@ async function orderGiftItem(memberId, cartId) {
  *
  * @param {Array<number>} cartIds - 장바구니 ID 목록
  */
-function showDeliveryInfoModal(cartIds) {
-	// 간단한 프롬프트로 임시 구현 (실제로는 모달 필요)
-	const deliveryName = prompt('받는 사람 이름을 입력해주세요:');
-	if (!deliveryName) return;
+async function showDeliveryInfoModal(cartIds) {
+	try {
+		// 배송지 입력 모달 표시 (delivery-modal.js 컴포넌트 사용)
+		const deliveryInfo = await showDeliveryModal();
 
-	const deliveryPhone = prompt('받는 사람 전화번호를 입력해주세요:');
-	if (!deliveryPhone) return;
+		if (!deliveryInfo) {
+			// 사용자가 취소한 경우
+			return;
+		}
 
-	const deliveryPostCode = prompt('우편번호를 입력해주세요:');
-	if (!deliveryPostCode) return;
+		// 주문 생성
+		await processOrder(cartIds, deliveryInfo);
 
-	const deliveryAddress = prompt('주소를 입력해주세요:');
-	if (!deliveryAddress) return;
-
-	const deliveryDetailAddress = prompt('상세주소를 입력해주세요 (선택):') || '';
-	const deliveryMessage = prompt('배송 메시지를 입력해주세요 (선택):') || '';
-
-	const deliveryInfo = {
-		name: deliveryName,
-		phone: deliveryPhone,
-		postCode: deliveryPostCode,
-		address: deliveryAddress,
-		detailAddress: deliveryDetailAddress,
-		message: deliveryMessage
-	};
-
-	// 주문 생성
-	processOrder(cartIds, deliveryInfo);
+	} catch (error) {
+		// 모달이 취소되거나 에러가 발생한 경우
+		console.log('배송지 입력이 취소되었습니다.');
+	}
 }
 
 /**
