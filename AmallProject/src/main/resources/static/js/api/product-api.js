@@ -143,17 +143,17 @@ function renderProductCard(product, options = {}) {
 		: '';
 
 	const clickHandler = clickable
-		? `onclick="goToProductDetail('${product.prodCode}')"`
+		? `onclick="goToProductDetail('${escapeAttribute(product.prodCode)}')"`
 		: '';
 
 	return `
 		<div class="product-card" data-prod-num="${product.prodNum}" ${clickHandler}>
 			<div class="product-image">
-				<img src="${product.prodImage1 || '/img/default-product.png'}" alt="${product.prodName}">
+				<img src="${escapeAttribute(product.prodImage1 || '/img/default-product.png')}" alt="${escapeAttribute(product.prodName)}">
 			</div>
 			<div class="product-info">
-				<h5 class="product-name">${product.prodName}</h5>
-				<p class="product-seller">${product.sellerId || ''}</p>
+				<h5 class="product-name">${escapeHtml(product.prodName)}</h5>
+				<p class="product-seller">${escapeHtml(product.sellerId || '')}</p>
 				${priceHtml}
 				${stockHtml}
 				<div class="product-actions">
@@ -199,7 +199,7 @@ function renderProducts(products, container, options = {}) {
  * @param {string} prodCode - 상품 코드
  */
 function goToProductDetail(prodCode) {
-	window.location.href = `/storeDetail/amall.com?prodCode=${prodCode}`;
+	window.location.href = `/storeDetail/amall.com?prodCode=${encodeURIComponent(prodCode)}`;
 }
 
 /**

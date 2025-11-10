@@ -111,12 +111,12 @@ function renderMainCoupleProducts(products) {
 function renderHomeProductCard(product) {
 	return `
 		<div class="itemInfor">
-			<a href="#" onclick="goToProductDetail('${product.prodCode}'); return false;">
+			<a href="#" onclick="goToProductDetail('${escapeAttribute(product.prodCode)}'); return false;">
 				<div class="itemImage">
-					<img src="${product.prodImage1 || '/img/default-product.png'}" alt="${product.prodName}">
+					<img src="${escapeAttribute(product.prodImage1 || '/img/default-product.png')}" alt="${escapeAttribute(product.prodName)}">
 				</div>
 				<div class="itemExplanation">
-					<h4>${product.prodName}</h4>
+					<h4>${escapeHtml(product.prodName)}</h4>
 					<h5>${product.prodPrice ? product.prodPrice.toLocaleString() + '원' : '가격 미정'}</h5>
 				</div>
 			</a>
