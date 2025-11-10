@@ -40,7 +40,33 @@
 	</select>
 	
 	<!-- UPDATE문 -->
-	
+
 	<!-- DELETE문 -->
-	
+	<delete id="removeWishList" parameterType="int">
+		<![CDATA[
+			DELETE FROM WISHLIST
+			WHERE WISHLIST_ID = #{wishlistId}
+		]]>
+	</delete>
+
+	<delete id="clearWishList" parameterType="String">
+		<![CDATA[
+			DELETE FROM WISHLIST
+			WHERE MEMBER_ID = #{memberId}
+		]]>
+	</delete>
+
+	<!-- 특정 회원의 특정 상품 조회 -->
+	<select id="findByMemberAndProduct" resultType="project.amall.wishlist.dto.WishListDto">
+		<![CDATA[
+			SELECT WISHLIST_ID,
+				   WISHLIST_REGDATE,
+				   MEMBER_ID,
+				   PROD_NUM
+			FROM WISHLIST
+			WHERE MEMBER_ID = #{memberId}
+			  AND PROD_NUM = #{prodNum}
+		]]>
+	</select>
+
 </mapper>

@@ -43,7 +43,41 @@
 	</select>
 	
 	<!-- UPDATE문 -->
-	
+	<update id="updateCartQuantity">
+		<![CDATA[
+			UPDATE CART
+			SET CART_QUANTITY = #{quantity}
+			WHERE CART_ID = #{cartId}
+		]]>
+	</update>
+
 	<!-- DELETE문 -->
-	
+	<delete id="removeFromCart" parameterType="int">
+		<![CDATA[
+			DELETE FROM CART
+			WHERE CART_ID = #{cartId}
+		]]>
+	</delete>
+
+	<delete id="clearCart" parameterType="String">
+		<![CDATA[
+			DELETE FROM CART
+			WHERE MEMBER_ID = #{memberId}
+		]]>
+	</delete>
+
+	<!-- 특정 회원의 특정 상품 조회 -->
+	<select id="findByMemberAndProduct" resultType="project.amall.cart.dto.CartDto">
+		<![CDATA[
+			SELECT CART_ID,
+				   CART_QUANTITY,
+				   CART_REG_DATE,
+				   MEMBER_ID,
+				   PROD_NUM
+			FROM CART
+			WHERE MEMBER_ID = #{memberId}
+			  AND PROD_NUM = #{prodNum}
+		]]>
+	</select>
+
 </mapper>

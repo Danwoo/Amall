@@ -71,13 +71,15 @@ public class ProductService {
 	public ProductDto getProductByNum(int prodNum) {
 		log.debug("상품 조회: prodNum={}", prodNum);
 
-		List<ProductDto> allProducts = productMapper.showAllProductStore();
-		return allProducts.stream()
-				.filter(p -> p.getProdNum() == prodNum)
-				.findFirst()
-				.orElseThrow(() -> new BusinessException(
-						ErrorCode.PRODUCT_NOT_FOUND,
-						"prodNum=" + prodNum
-				));
+		ProductDto product = productMapper.getProductByNum(prodNum);
+
+		if (product == null) {
+			throw new BusinessException(
+					ErrorCode.PRODUCT_NOT_FOUND,
+					"prodNum=" + prodNum
+			);
+		}
+
+		return product;
 	}
 }
