@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.amall.common.response.ApiResponse;
+import project.amall.common.util.SecurityUtils;
 import project.amall.product.dto.ProductDto;
 import project.amall.wishlist.dto.request.AddToWishListRequest;
 import project.amall.wishlist.dto.response.WishListResponse;
@@ -44,6 +45,9 @@ public class WishListApiController {
 
 		log.info("위시리스트 조회 API: memberId={}", memberId);
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		List<ProductDto> wishList = wishListService.showThisIdWishList(memberId);
 		List<WishListResponse> response = wishList.stream()
 				.map(WishListResponse::from)
@@ -67,6 +71,9 @@ public class WishListApiController {
 			@PathVariable String memberId) {
 
 		log.info("커플 위시리스트 조회 API: memberId={}", memberId);
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		List<ProductDto> partnerWishList = wishListService.showPartnerWishList(memberId);
 		List<WishListResponse> response = partnerWishList.stream()
@@ -93,6 +100,9 @@ public class WishListApiController {
 		log.info("위시리스트 추가 API: memberId={}, prodNum={}",
 				memberId, request.getProdNum());
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		wishListService.addWishList(memberId, request.getProdNum());
 
 		return ResponseEntity
@@ -116,6 +126,9 @@ public class WishListApiController {
 
 		log.info("위시리스트 삭제 API: memberId={}, wishlistId={}", memberId, wishlistId);
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		wishListService.removeWishList(wishlistId);
 
 		return ResponseEntity.ok(ApiResponse.success("위시리스트에서 삭제되었습니다."));
@@ -134,6 +147,9 @@ public class WishListApiController {
 			@PathVariable String memberId) {
 
 		log.info("위시리스트 전체 삭제 API: memberId={}", memberId);
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		wishListService.clearWishList(memberId);
 
@@ -155,6 +171,9 @@ public class WishListApiController {
 			@RequestParam int prodNum) {
 
 		log.info("위시리스트 포함 여부 확인 API: memberId={}, prodNum={}", memberId, prodNum);
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		boolean inWishList = wishListService.isInWishList(memberId, prodNum);
 

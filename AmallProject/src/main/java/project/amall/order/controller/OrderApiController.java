@@ -13,6 +13,7 @@ import project.amall.order.dto.request.CreateOrderRequest;
 import project.amall.order.dto.request.UpdateDeliveryAddressRequest;
 import project.amall.order.dto.response.OrderResponse;
 import project.amall.order.service.OrderService;
+import project.amall.common.util.SecurityUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +47,9 @@ public class OrderApiController {
 
 		log.info("일반 주문 생성 API: memberId={}, cartIds={}", memberId, request.getCartIds());
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		String orderId = orderService.createOrder(
 				memberId,
 				request.getCartIds(),
@@ -78,6 +82,9 @@ public class OrderApiController {
 			@Valid @RequestBody CreateGiftOrderRequest request) {
 
 		log.info("선물 주문 생성 API: memberId={}, cartId={}", memberId, request.getCartId());
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		String orderId = orderService.createGiftOrder(
 				memberId,
@@ -125,6 +132,9 @@ public class OrderApiController {
 
 		log.info("회원 주문 목록 조회 API: memberId={}", memberId);
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		List<OrderDto> orders = orderService.getMemberOrders(memberId);
 		List<OrderResponse> response = orders.stream()
 				.map(OrderResponse::from)
@@ -146,6 +156,9 @@ public class OrderApiController {
 			@PathVariable String memberId) {
 
 		log.info("선물 받은 주문 목록 조회 API: memberId={}", memberId);
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		List<OrderDto> orders = orderService.getGiftOrdersReceived(memberId);
 		List<OrderResponse> response = orders.stream()
