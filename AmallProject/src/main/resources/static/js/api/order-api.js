@@ -200,3 +200,37 @@ async function getPendingGiftDeliveryRequests(memberId) {
 		return [];
 	}
 }
+
+/**
+ * 주문 취소
+ *
+ * @param {string} memberId - 회원 ID
+ * @param {string} orderId - 주문 ID
+ * @returns {Promise<boolean>} 성공 여부
+ */
+async function cancelOrder(memberId, orderId) {
+	const confirmed = await confirm('정말 주문을 취소하시겠습니까?\n재고가 복원되며 이 작업은 되돌릴 수 없습니다.');
+
+	if (!confirmed) {
+		return false;
+	}
+
+	showLoading();
+
+	try {
+		const response = await apiClient.delete(`/api/orders/${orderId}?memberId=${memberId}`);
+
+		hideLoading();
+
+		if (response.success) {
+			showToast('주문이 취소되었습니다.', 'success');
+			return true;
+		}
+
+		return false;
+	} catch (error) {
+		hideLoading();
+		showToast(error.message || '주문 취소에 실패했습니다.', 'error');
+		return false;
+	}
+}
