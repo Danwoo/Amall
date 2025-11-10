@@ -302,4 +302,24 @@ public class AmallController {
 
 		return "content/alarm";
 	}
+
+	/**
+	 * 주문 내역 페이지
+	 *
+	 * GET /amall.order-history.com
+	 *
+	 * 로그인 필수
+	 * 회원의 주문 내역 및 받은 선물 표시
+	 */
+	@RequestMapping(value="/amall.order-history.com", produces="application/text;charset=utf-8")
+	public String goOrderHistory(HttpSession session, Model model, HttpServletResponse response) throws IOException {
+		if (!checkLoginAndRedirect(session, model, response)) {
+			return "content/home";
+		}
+
+		// 회원 정보 갱신 (Helper 메서드 사용 - 중복 제거)
+		refreshMemberSession(session);
+
+		return "content/order-history";
+	}
 }
