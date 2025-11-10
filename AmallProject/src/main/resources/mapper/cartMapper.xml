@@ -104,4 +104,20 @@
 		]]>
 	</update>
 
+	<!-- 장바구니 ID로 조회 -->
+	<select id="findById" parameterType="int" resultType="project.amall.cart.dto.CartDto">
+		<![CDATA[
+			SELECT CART_ID,
+				   CART_QUANTITY,
+				   CART_REG_DATE,
+				   MEMBER_ID,
+				   PROD_NUM,
+				   IS_GIFT,
+				   GIFT_TO_MEMBER_ID,
+				   GIFT_MESSAGE
+			FROM CART
+			WHERE CART_ID = #{cartId}
+		]]>
+	</select>
+
 </mapper>
