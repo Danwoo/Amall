@@ -1,6 +1,7 @@
 package project.amall.order.dto;
 
 import lombok.Data;
+import project.amall.common.constants.AppConstants;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,14 +45,14 @@ public class OrderDto {
 	 * 선물 여부 확인
 	 */
 	public boolean isGift() {
-		return "Y".equals(this.isGift);
+		return AppConstants.IS_GIFT_YES.equals(this.isGift);
 	}
 
 	/**
 	 * 일반 주문으로 설정
 	 */
 	public void setAsNormalOrder() {
-		this.isGift = "N";
+		this.isGift = AppConstants.IS_GIFT_NO;
 		this.giftFromMemberId = null;
 		this.giftMessage = null;
 	}
@@ -60,7 +61,7 @@ public class OrderDto {
 	 * 선물 주문으로 설정
 	 */
 	public void setAsGiftOrder(String fromMemberId, String message) {
-		this.isGift = "Y";
+		this.isGift = AppConstants.IS_GIFT_YES;
 		this.giftFromMemberId = fromMemberId;
 		this.giftMessage = message;
 	}
@@ -69,11 +70,11 @@ public class OrderDto {
 	 * 주문 상태 Enum
 	 */
 	public enum OrderStatus {
-		PENDING("PENDING", "결제대기"),
-		PAID("PAID", "결제완료"),
-		SHIPPED("SHIPPED", "배송중"),
-		DELIVERED("DELIVERED", "배송완료"),
-		CANCELLED("CANCELLED", "주문취소");
+		PENDING(AppConstants.ORDER_STATUS_PENDING, "결제대기"),
+		PAID(AppConstants.ORDER_STATUS_PAID, "결제완료"),
+		SHIPPED(AppConstants.ORDER_STATUS_SHIPPED, "배송중"),
+		DELIVERED(AppConstants.ORDER_STATUS_DELIVERED, "배송완료"),
+		CANCELLED(AppConstants.ORDER_STATUS_CANCELLED, "주문취소");
 
 		private final String code;
 		private final String description;

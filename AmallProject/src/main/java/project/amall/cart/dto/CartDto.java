@@ -3,6 +3,7 @@ package project.amall.cart.dto;
 import org.springframework.context.annotation.PropertySource;
 
 import lombok.Data;
+import project.amall.common.constants.AppConstants;
 import project.amall.product.dto.ProductDto;
 
 /**
@@ -33,14 +34,14 @@ public class CartDto {
 	 * 선물 여부 확인
 	 */
 	public boolean isGift() {
-		return "Y".equals(this.isGift);
+		return AppConstants.IS_GIFT_YES.equals(this.isGift);
 	}
 
 	/**
 	 * 일반 구매로 설정
 	 */
 	public void setAsNormalPurchase() {
-		this.isGift = "N";
+		this.isGift = AppConstants.IS_GIFT_NO;
 		this.giftToMemberId = null;
 		this.giftMessage = null;
 	}
@@ -49,7 +50,7 @@ public class CartDto {
 	 * 선물로 설정
 	 */
 	public void setAsGift(String toMemberId, String message) {
-		this.isGift = "Y";
+		this.isGift = AppConstants.IS_GIFT_YES;
 		this.giftToMemberId = toMemberId;
 		this.giftMessage = message;
 	}
