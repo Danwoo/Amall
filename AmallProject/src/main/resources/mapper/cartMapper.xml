@@ -7,12 +7,15 @@
 	<insert id="addToCart" parameterType="project.amall.cart.dto.CartDto">
 		<![CDATA[
 			INSERT INTO CART
-			(	
+			(
 				CART_ID,
 				CART_QUANTITY,
 				CART_REG_DATE,
 				MEMBER_ID,
-				PROD_NUM
+				PROD_NUM,
+				IS_GIFT,
+				GIFT_TO_MEMBER_ID,
+				GIFT_MESSAGE
 			)
 			VALUES
 			(
@@ -20,7 +23,10 @@
 				#{cartQuantity},
 				#{cartRegDate},
 				#{memberId},
-				#{prodNum}
+				#{prodNum},
+				NVL(#{isGift}, 'N'),
+				#{giftToMemberId},
+				#{giftMessage}
 			)
 		]]>
 	</insert>
@@ -28,8 +34,12 @@
 	<!-- SELECT문 -->
 	<select id="showMyCart" parameterType="String" resultType="java.util.HashMap">
 		<![CDATA[
-			SELECT C.CART_QUANTITY,
+			SELECT C.CART_ID,
+				   C.CART_QUANTITY,
 				   C.PROD_NUM,
+				   C.IS_GIFT,
+				   C.GIFT_TO_MEMBER_ID,
+				   C.GIFT_MESSAGE,
 				   P.PROD_IMAGE1,
 				   P.SELLER_ID,
 				   P.PROD_NAME,
@@ -73,11 +83,25 @@
 				   CART_QUANTITY,
 				   CART_REG_DATE,
 				   MEMBER_ID,
-				   PROD_NUM
+				   PROD_NUM,
+				   IS_GIFT,
+				   GIFT_TO_MEMBER_ID,
+				   GIFT_MESSAGE
 			FROM CART
 			WHERE MEMBER_ID = #{memberId}
 			  AND PROD_NUM = #{prodNum}
 		]]>
 	</select>
+
+	<!-- 선물 정보 업데이트 -->
+	<update id="updateGiftInfo">
+		<![CDATA[
+			UPDATE CART
+			SET IS_GIFT = #{isGift},
+				GIFT_TO_MEMBER_ID = #{giftToMemberId},
+				GIFT_MESSAGE = #{giftMessage}
+			WHERE CART_ID = #{cartId}
+		]]>
+	</update>
 
 </mapper>
