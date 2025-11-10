@@ -1,0 +1,50 @@
+# Server Configuration
+server:
+  port: 8090
+
+# Spring Configuration
+spring:
+  # DataSource Configuration
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    # TODO: 환경변수로 변경 예정
+    url: jdbc:oracle:thin:@192.168.1.104:1521:xe
+    username: ${DB_USERNAME:c##amall}
+    password: ${DB_PASSWORD:amall}
+    hikari:
+      idle-timeout: 10000
+    type: com.zaxxer.hikari.HikariDataSource
+
+  # Thymeleaf Configuration
+  thymeleaf:
+    enabled: true
+    cache: false
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+
+  # DevTools Configuration
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  # Security Configuration (기본 설정)
+  security:
+    user:
+      name: admin
+      password: admin
+
+# MyBatis Configuration
+mybatis:
+  type-aliases-package: com.project.board
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# Logging Configuration (개발 환경)
+logging:
+  level:
+    project.amall: DEBUG
+    org.springframework.security: DEBUG

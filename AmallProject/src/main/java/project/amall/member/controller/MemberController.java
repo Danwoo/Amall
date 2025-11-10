@@ -46,6 +46,14 @@ public class MemberController {
 		return "content/home";
 	}
 	
+	/**
+	 * @deprecated Spring Security가 로그인을 처리합니다.
+	 * SecurityConfig 및 CustomAuthenticationSuccessHandler 참조
+	 *
+	 * 이 메소드는 더 이상 사용되지 않습니다.
+	 * 로그인은 POST /member/login 으로 Spring Security가 자동 처리합니다.
+	 */
+	@Deprecated
 	@RequestMapping(value="/login/amall.com", produces="application/text;charset=utf-8")
 	public String loginMember(HttpSession session, Model model, HttpServletResponse response, MemberDto member) throws IOException {
 		MemberDto dto = memberService.loginMember(member);
