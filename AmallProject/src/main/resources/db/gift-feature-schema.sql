@@ -10,8 +10,8 @@ ALTER TABLE CART ADD (
     CONSTRAINT CHK_CART_IS_GIFT CHECK (IS_GIFT IN ('Y', 'N'))
 );
 
--- 인덱스 추가 (성능 향상)
-CREATE INDEX IDX_CART_GIFT_TO ON CART(GIFT_TO_MEMBER_ID) WHERE IS_GIFT = 'Y';
+-- 인덱스 추가 (성능 향상) - Oracle에서는 Function-based index 사용
+CREATE INDEX IDX_CART_GIFT_TO ON CART(GIFT_TO_MEMBER_ID, IS_GIFT);
 
 -- 2. WISHLIST 테이블 확인 (이미 존재하는 구조)
 -- WISHLIST_ID, WISHLIST_REGDATE, MEMBER_ID, PROD_NUM
@@ -88,18 +88,20 @@ CREATE INDEX IDX_ORDERS_MEMBER ON ORDERS(MEMBER_ID);
 CREATE INDEX IDX_ORDER_ITEM_ORDER ON ORDER_ITEM(ORDER_ID);
 
 -- ============================================
--- 샘플 데이터 (테스트용)
+-- 샘플 데이터 (테스트용 - 필요시 주석 해제)
 -- ============================================
 
--- 예시: 일반 장바구니
+/*
+-- 예시: 일반 장바구니 (CART_ID는 실제 시퀀스 값 사용 권장)
 INSERT INTO CART (CART_ID, CART_QUANTITY, CART_REG_DATE, MEMBER_ID, PROD_NUM, IS_GIFT)
-VALUES (1, 2, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'), 'user1', 101, 'N');
+VALUES (99991, 2, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'), 'testuser1', 1, 'N');
 
 -- 예시: 선물 장바구니
 INSERT INTO CART (CART_ID, CART_QUANTITY, CART_REG_DATE, MEMBER_ID, PROD_NUM, IS_GIFT, GIFT_TO_MEMBER_ID, GIFT_MESSAGE)
-VALUES (2, 1, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI'), 'user1', 102, 'Y', 'user2', '생일 축하해!');
+VALUES (99992, 1, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'), 'testuser1', 2, 'Y', 'testuser2', '생일 축하해!');
 
 COMMIT;
+*/
 
 -- ============================================
 -- 롤백용 (필요 시)
