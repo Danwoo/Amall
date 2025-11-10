@@ -165,7 +165,7 @@ public class OrderService {
 		}
 
 		// (4) 선물 받는 사람 존재 여부 확인
-		MemberDto recipient = memberMapper.getMemberById(cart.getGiftToMemberId());
+		MemberDto recipient = memberMapper.reloadMemberData(cart.getGiftToMemberId());
 		if (recipient == null) {
 			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "선물 받는 사람을 찾을 수 없습니다: " + cart.getGiftToMemberId());
 		}
@@ -473,7 +473,7 @@ public class OrderService {
 	 * @throws BusinessException 회원이 없는 경우
 	 */
 	private MemberDto validateMemberExists(String memberId) {
-		MemberDto member = memberMapper.getMemberById(memberId);
+		MemberDto member = memberMapper.reloadMemberData(memberId);
 		if (member == null) {
 			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "memberId=" + memberId);
 		}
