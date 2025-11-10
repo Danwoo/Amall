@@ -345,14 +345,26 @@
 <!-- Daum Postcode API (주소 검색용) -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-<!-- 의존성 스크립트 -->
-<script th:src="@{/js/api/api-client.js}"></script>
-<script th:src="@{/js/api/order-api.js}"></script>
-<script th:src="@{/js/utils/ui-utils.js}"></script>
-<script th:src="@{/js/components/delivery-modal.js}"></script>
+<!-- inline JS 영역-->
+<!-- UI 유틸리티 (Toast, 로딩 등) -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/ui-utils.js}"></script>
 
-<!-- 페이지 핸들러 -->
-<script th:src="@{/js/gift-management-handler.js}"></script>
+<!-- 공통 유틸리티 (getMemberIdFromPage, formatDate, formatPrice 등) -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/common-utils.js}"></script>
+
+<!-- 검증 유틸리티 -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/validation.js}"></script>
+
+<!-- 배송지 입력 모달 컴포넌트 -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/components/delivery-modal.js}"></script>
+
+<!-- API 클라이언트 및 관련 API -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/api/api-client.js}"></script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/api/order-api.js}"></script>
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/api/gift-api.js}"></script>
+
+<!-- Gift Management 페이지 핸들러 -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/gift-management-handler.js}"></script>
 
 <!-- 회원 ID 주입 (JavaScript에서 사용) -->
 <meta name="member-id" th:content="${#authentication.name}" sec:authorize="isAuthenticated()">
