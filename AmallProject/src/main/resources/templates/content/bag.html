@@ -18,6 +18,20 @@
 
 <!-- inline JS 영역-->
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!-- Daum Postcode API (주소 검색) -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<!-- UI 유틸리티 (Toast, 로딩, 확인 다이얼로그, escapeHtml) -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/ui-utils.js}"></script>
+
+<!-- 검증 유틸리티 -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/validation.js}"></script>
+
+<!-- 배송지 입력 모달 컴포넌트 -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/components/delivery-modal.js}"></script>
+
+<!-- Bag 페이지 핸들러 -->
 <script th:inline="javascript" type="text/javascript" th:src="@{/js/bag-handler.js}"></script>
 
 <!-- 회원 ID 주입 (JavaScript에서 사용) -->
