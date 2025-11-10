@@ -28,20 +28,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 	setupGiftModal();
 });
 
-/**
- * 페이지에서 회원 ID 추출
- */
-function getMemberIdFromPage() {
-	// Thymeleaf에서 주입한 memberId를 찾음
-	// (임시: 나중에 서버에서 주입하도록 수정 필요)
-	const metaTag = document.querySelector('meta[name="member-id"]');
-	if (metaTag) {
-		return metaTag.getAttribute('content');
-	}
-
-	// 세션 스토리지에서 조회 (로그인 시 저장된 경우)
-	return sessionStorage.getItem('memberId');
-}
+// getMemberIdFromPage() is now in common-utils.js
 
 /**
  * 내 위시리스트 로드
