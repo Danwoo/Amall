@@ -359,15 +359,14 @@ public class CartService {
 	 * @throws BusinessException 찾을 수 없는 경우
 	 */
 	private CartDto getCartById(int cartId) {
-		// TODO: Mapper에 findById 메소드 추가 필요
-		List<CartDto> allCarts = cartMapper.showMyCart(null);
-		return allCarts.stream()
-				.filter(c -> c.getCartId() == cartId)
-				.findFirst()
-				.orElseThrow(() -> new BusinessException(
-						ErrorCode.ENTITY_NOT_FOUND,
-						"장바구니 아이템을 찾을 수 없습니다: cartId=" + cartId
-				));
+		CartDto cart = cartMapper.findById(cartId);
+		if (cart == null) {
+			throw new BusinessException(
+					ErrorCode.ENTITY_NOT_FOUND,
+					"장바구니 아이템을 찾을 수 없습니다: cartId=" + cartId
+			);
+		}
+		return cart;
 	}
 
 	/**

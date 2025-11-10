@@ -70,4 +70,12 @@ public interface CartMapper {
 	 * @return 수정된 행 수
 	 */
 	int updateGiftInfo(CartDto cartDto);
+
+	/**
+	 * 장바구니 ID로 조회
+	 *
+	 * @param cartId 장바구니 ID
+	 * @return 장바구니 정보 (없으면 null)
+	 */
+	CartDto findById(int cartId);
 }
