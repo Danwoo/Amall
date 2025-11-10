@@ -226,13 +226,13 @@ public class AmallController {
 		MemberDto dto = refreshMemberSession(session);
 
 		// 내 위시리스트 조회
-		List<ProductDto> myWishList = wishListService.showThisIdWishList(dto.getMemberId());
+		List<ProductDto> myWishList = wishListService.getWishList(dto.getMemberId());
 		model.addAttribute("myWishList", myWishList);
 
 		// 커플 매칭 여부 확인
 		if (dto.getMemberMatchId() != null) {
 			// 커플인 경우: 상대방 위시리스트도 조회
-			List<ProductDto> yourWishList = wishListService.showThisIdWishList(dto.getMemberMatchId());
+			List<ProductDto> yourWishList = wishListService.getWishList(dto.getMemberMatchId());
 			model.addAttribute("yourWishList", yourWishList);
 			model.addAttribute("checkCouple", true);
 		} else {
@@ -260,7 +260,7 @@ public class AmallController {
 		MemberDto dto = refreshMemberSession(session);
 
 		// 장바구니 조회
-		List<CartDto> cartList = cartService.showMyCart(dto.getMemberId());
+		List<CartDto> cartList = cartService.getCart(dto.getMemberId());
 		model.addAttribute("cartList", cartList);
 
 		log.debug("장바구니 조회: memberId={}, count={}", dto.getMemberId(), cartList.size());

@@ -48,7 +48,7 @@ public class WishListApiController {
 		// 본인 확인
 		SecurityUtils.validateMemberAccess(memberId);
 
-		List<ProductDto> wishList = wishListService.showThisIdWishList(memberId);
+		List<ProductDto> wishList = wishListService.getWishList(memberId);
 		List<WishListResponse> response = wishList.stream()
 				.map(WishListResponse::from)
 				.collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class WishListApiController {
 		// 본인 확인
 		SecurityUtils.validateMemberAccess(memberId);
 
-		List<ProductDto> partnerWishList = wishListService.showPartnerWishList(memberId);
+		List<ProductDto> partnerWishList = wishListService.getPartnerWishList(memberId);
 		List<WishListResponse> response = partnerWishList.stream()
 				.map(WishListResponse::from)
 				.collect(Collectors.toList());

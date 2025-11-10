@@ -40,6 +40,7 @@ public class GiftDeliveryRequestService {
 	 *
 	 * @param requestId 요청 ID
 	 * @return 요청 정보
+	 * @throws BusinessException 요청을 찾을 수 없는 경우
 	 */
 	public GiftDeliveryRequestDto getRequestById(int requestId) {
 		GiftDeliveryRequestDto request = giftDeliveryRequestMapper.findRequestById(requestId);
@@ -54,6 +55,7 @@ public class GiftDeliveryRequestService {
 	 *
 	 * @param orderId 주문 ID
 	 * @return 요청 정보
+	 * @throws BusinessException 요청을 찾을 수 없는 경우
 	 */
 	public GiftDeliveryRequestDto getRequestByOrderId(String orderId) {
 		GiftDeliveryRequestDto request = giftDeliveryRequestMapper.findRequestByOrderId(orderId);
