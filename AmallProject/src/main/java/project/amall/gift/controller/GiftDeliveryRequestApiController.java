@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.amall.common.response.ApiResponse;
+import project.amall.common.util.SecurityUtils;
 import project.amall.gift.dto.GiftDeliveryRequestDto;
 import project.amall.gift.dto.response.GiftDeliveryRequestResponse;
 import project.amall.gift.service.GiftDeliveryRequestService;
@@ -38,6 +39,9 @@ public class GiftDeliveryRequestApiController {
 			@PathVariable String memberId) {
 
 		log.info("대기 중인 선물 배송지 입력 요청 조회 API: memberId={}", memberId);
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		List<GiftDeliveryRequestDto> requests = giftDeliveryRequestService.getPendingRequests(memberId);
 		List<GiftDeliveryRequestResponse> response = requests.stream()

@@ -14,6 +14,7 @@ import project.amall.cart.dto.request.UpdateCartQuantityRequest;
 import project.amall.cart.dto.response.CartResponse;
 import project.amall.cart.service.CartService;
 import project.amall.common.response.ApiResponse;
+import project.amall.common.util.SecurityUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,9 @@ public class CartApiController {
 
 		log.info("장바구니 조회 API: memberId={}", memberId);
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		List<CartDto> cartList = cartService.showMyCart(memberId);
 		List<CartResponse> response = cartList.stream()
 				.map(CartResponse::from)
@@ -70,6 +74,9 @@ public class CartApiController {
 		log.info("장바구니 추가 API: memberId={}, prodNum={}, quantity={}",
 				memberId, request.getProdNum(), request.getQuantity());
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		cartService.addToCart(memberId, request.getProdNum(), request.getQuantity());
 
 		return ResponseEntity
@@ -93,6 +100,9 @@ public class CartApiController {
 
 		log.info("선물 장바구니 추가 API: memberId={}, prodNum={}, giftTo={}",
 				memberId, request.getProdNum(), request.getGiftToMemberId());
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		cartService.addToCartAsGift(
 				memberId,
@@ -126,6 +136,9 @@ public class CartApiController {
 		log.info("장바구니 수량 수정 API: memberId={}, cartId={}, quantity={}",
 				memberId, cartId, request.getQuantity());
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		cartService.updateCartQuantity(cartId, request.getQuantity());
 
 		return ResponseEntity.ok(ApiResponse.success("수량이 수정되었습니다."));
@@ -150,6 +163,9 @@ public class CartApiController {
 		log.info("장바구니 선물 설정 API: memberId={}, cartId={}, giftTo={}",
 				memberId, cartId, request.getGiftToMemberId());
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		cartService.setAsGift(cartId, request.getGiftToMemberId(), request.getGiftMessage());
 
 		return ResponseEntity.ok(ApiResponse.success("선물로 설정되었습니다."));
@@ -170,6 +186,9 @@ public class CartApiController {
 			@PathVariable int cartId) {
 
 		log.info("장바구니 일반 구매 변경 API: memberId={}, cartId={}", memberId, cartId);
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		cartService.setAsNormalPurchase(cartId);
 
@@ -192,6 +211,9 @@ public class CartApiController {
 
 		log.info("장바구니 삭제 API: memberId={}, cartId={}", memberId, cartId);
 
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
+
 		cartService.removeFromCart(cartId);
 
 		return ResponseEntity.ok(ApiResponse.success("장바구니에서 삭제되었습니다."));
@@ -210,6 +232,9 @@ public class CartApiController {
 			@PathVariable String memberId) {
 
 		log.info("장바구니 전체 삭제 API: memberId={}", memberId);
+
+		// 본인 확인
+		SecurityUtils.validateMemberAccess(memberId);
 
 		cartService.clearCart(memberId);
 
