@@ -2,6 +2,8 @@ package project.amall.order.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import project.amall.common.validation.ValidPhoneNumber;
+import project.amall.common.validation.ValidPostCode;
 
 /**
  * 배송지 정보 수정 요청 DTO
@@ -17,9 +19,11 @@ public class UpdateDeliveryAddressRequest {
 	private String deliveryName;
 
 	@NotBlank(message = "받는 사람 전화번호는 필수입니다.")
+	@ValidPhoneNumber
 	private String deliveryPhone;
 
 	@NotBlank(message = "우편번호는 필수입니다.")
+	@ValidPostCode
 	private String deliveryPostCode;
 
 	@NotBlank(message = "주소는 필수입니다.")

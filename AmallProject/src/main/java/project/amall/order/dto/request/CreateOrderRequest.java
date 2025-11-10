@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import project.amall.common.validation.ValidPhoneNumber;
+import project.amall.common.validation.ValidPostCode;
 
 import java.util.List;
 
@@ -24,9 +26,11 @@ public class CreateOrderRequest {
 	private String deliveryName;
 
 	@NotBlank(message = "받는 사람 전화번호는 필수입니다.")
+	@ValidPhoneNumber
 	private String deliveryPhone;
 
 	@NotBlank(message = "우편번호는 필수입니다.")
+	@ValidPostCode
 	private String deliveryPostCode;
 
 	@NotBlank(message = "주소는 필수입니다.")
