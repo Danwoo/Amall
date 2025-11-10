@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import project.amall.cart.dto.CartDto;
 import project.amall.cart.mapper.CartMapper;
+import project.amall.common.constants.AppConstants;
 import project.amall.common.exception.BusinessException;
 import project.amall.common.exception.code.ErrorCode;
 import project.amall.common.util.DateTimeUtils;
@@ -39,7 +40,7 @@ public class CartService {
 	 * @param memberId 회원 ID
 	 * @return 장바구니 목록
 	 */
-	public List<CartDto> showMyCart(String memberId) {
+	public List<CartDto> getCart(String memberId) {
 		log.debug("장바구니 조회: memberId={}", memberId);
 		return cartMapper.showMyCart(memberId);
 	}
@@ -52,66 +53,26 @@ public class CartService {
 	 * @param memberId 회원 ID
 	 * @param prodNum 상품 번호
 	 * @param quantity 수량
+	 * @throws BusinessException 검증 실패 시
 	 */
 	@Transactional
 	public void addToCart(String memberId, int prodNum, int quantity) {
 		log.debug("장바구니 추가: memberId={}, prodNum={}, quantity={}", memberId, prodNum, quantity);
 
 		// (1) 수량 유효성 검증
-		if (quantity <= 0) {
-			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "수량은 1 이상이어야 합니다.");
-		}
+		validateQuantity(quantity);
 
-		// (2) 상품 존재 여부 확인
-		ProductDto product = productMapper.getProductByNum(prodNum);
-		if (product == null) {
-			throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "prodNum=" + prodNum);
-		}
-
-		// (3) 재고 확인
-		if (product.getProdStock() < quantity) {
-			throw new BusinessException(
-					ErrorCode.INVALID_INPUT_VALUE,
-					String.format("재고 부족: 요청 수량=%d, 재고=%d", quantity, product.getProdStock())
-			);
-		}
+		// (2) 상품 존재 여부 및 재고 확인
+		ProductDto product = validateProductAndStock(prodNum, quantity);
 
 		// (4) 이미 장바구니에 있는 상품인지 확인
 		CartDto existingCart = cartMapper.findByMemberAndProduct(memberId, prodNum);
 
+		// (3) 이미 장바구니에 있는 경우 수량 증가, 없으면 새로 추가
 		if (existingCart != null) {
-			// 이미 있으면 수량 증가
-			int newQuantity = existingCart.getCartQuantity() + quantity;
-
-			// 재고 재확인
-			if (product.getProdStock() < newQuantity) {
-				throw new BusinessException(
-						ErrorCode.INVALID_INPUT_VALUE,
-						String.format("재고 부족: 장바구니 수량=%d, 추가 수량=%d, 재고=%d",
-								existingCart.getCartQuantity(), quantity, product.getProdStock())
-				);
-			}
-
-			updateCartQuantity(existingCart.getCartId(), newQuantity);
-			log.info("장바구니 수량 증가: cartId={}, {} → {}", existingCart.getCartId(),
-					existingCart.getCartQuantity(), newQuantity);
+			handleExistingCartItem(existingCart, product, quantity);
 		} else {
-			// 새로 추가
-			CartDto cartDto = new CartDto();
-			cartDto.setCartId(IdGenerator.generateCartId());
-			cartDto.setCartQuantity(quantity);
-			cartDto.setCartRegDate(DateTimeUtils.getCurrentDateTime());
-			cartDto.setMemberId(memberId);
-			cartDto.setProdNum(prodNum);
-			cartDto.setAsNormalPurchase();  // 기본은 일반 구매
-
-			int result = cartMapper.addToCart(cartDto);
-			if (result == 0) {
-				throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "장바구니 추가 실패");
-			}
-
-			log.info("장바구니 추가 완료: cartId={}, prodNum={}, quantity={}",
-					cartDto.getCartId(), prodNum, quantity);
+			createNewCartItem(memberId, prodNum, quantity, false, null, null);
 		}
 	}
 
@@ -123,6 +84,7 @@ public class CartService {
 	 * @param quantity 수량
 	 * @param giftToMemberId 선물 받는 사람 ID
 	 * @param giftMessage 선물 메시지
+	 * @throws BusinessException 검증 실패 시
 	 */
 	@Transactional
 	public void addToCartAsGift(String memberId, int prodNum, int quantity,
@@ -131,9 +93,7 @@ public class CartService {
 				memberId, prodNum, quantity, giftToMemberId);
 
 		// (1) 기본 검증
-		if (quantity <= 0) {
-			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "수량은 1 이상이어야 합니다.");
-		}
+		validateQuantity(quantity);
 
 		if (giftToMemberId == null || giftToMemberId.trim().isEmpty()) {
 			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "선물 받는 사람을 지정해주세요.");
@@ -143,57 +103,15 @@ public class CartService {
 		validateCoupleMatching(memberId, giftToMemberId);
 
 		// (3) 상품 존재 여부 및 재고 확인
-		ProductDto product = productMapper.getProductByNum(prodNum);
-		if (product == null) {
-			throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "prodNum=" + prodNum);
-		}
+		ProductDto product = validateProductAndStock(prodNum, quantity);
 
-		if (product.getProdStock() < quantity) {
-			throw new BusinessException(
-					ErrorCode.INVALID_INPUT_VALUE,
-					String.format("재고 부족: 요청 수량=%d, 재고=%d", quantity, product.getProdStock())
-			);
-		}
-
-		// (4) 이미 장바구니에 있는 상품인지 확인
+		// (4) 이미 장바구니에 있는 경우 수량 증가 + 선물 정보 업데이트, 없으면 새로 추가
 		CartDto existingCart = cartMapper.findByMemberAndProduct(memberId, prodNum);
 
 		if (existingCart != null) {
-			// 이미 있으면 수량 증가 + 선물 정보 업데이트
-			int newQuantity = existingCart.getCartQuantity() + quantity;
-
-			// 재고 재확인
-			if (product.getProdStock() < newQuantity) {
-				throw new BusinessException(
-						ErrorCode.INVALID_INPUT_VALUE,
-						String.format("재고 부족: 장바구니 수량=%d, 추가 수량=%d, 재고=%d",
-								existingCart.getCartQuantity(), quantity, product.getProdStock())
-				);
-			}
-
-			updateCartQuantity(existingCart.getCartId(), newQuantity);
-			existingCart.setAsGift(giftToMemberId, giftMessage);
-			cartMapper.updateGiftInfo(existingCart);
-
-			log.info("장바구니 수량 증가 + 선물 설정: cartId={}, {} → {}, giftTo={}",
-					existingCart.getCartId(), existingCart.getCartQuantity(), newQuantity, giftToMemberId);
+			handleExistingCartItemAsGift(existingCart, product, quantity, giftToMemberId, giftMessage);
 		} else {
-			// 새로 추가
-			CartDto cartDto = new CartDto();
-			cartDto.setCartId(IdGenerator.generateCartId());
-			cartDto.setCartQuantity(quantity);
-			cartDto.setCartRegDate(DateTimeUtils.getCurrentDateTime());
-			cartDto.setMemberId(memberId);
-			cartDto.setProdNum(prodNum);
-			cartDto.setAsGift(giftToMemberId, giftMessage);
-
-			int result = cartMapper.addToCart(cartDto);
-			if (result == 0) {
-				throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "선물 장바구니 추가 실패");
-			}
-
-			log.info("선물 장바구니 추가 완료: cartId={}, prodNum={}, quantity={}, giftTo={}",
-					cartDto.getCartId(), prodNum, quantity, giftToMemberId);
+			createNewCartItem(memberId, prodNum, quantity, true, giftToMemberId, giftMessage);
 		}
 	}
 
@@ -203,6 +121,7 @@ public class CartService {
 	 * @param cartId 장바구니 ID
 	 * @param giftToMemberId 선물 받는 사람 ID
 	 * @param giftMessage 선물 메시지
+	 * @throws BusinessException 검증 실패 시
 	 */
 	@Transactional
 	public void setAsGift(int cartId, String giftToMemberId, String giftMessage) {
@@ -229,6 +148,7 @@ public class CartService {
 	 * 장바구니 아이템을 일반 구매로 변경
 	 *
 	 * @param cartId 장바구니 ID
+	 * @throws BusinessException 검증 실패 시
 	 */
 	@Transactional
 	public void setAsNormalPurchase(int cartId) {
@@ -250,14 +170,13 @@ public class CartService {
 	 *
 	 * @param cartId 장바구니 ID
 	 * @param quantity 변경할 수량
+	 * @throws BusinessException 검증 실패 시
 	 */
 	@Transactional
 	public void updateCartQuantity(int cartId, int quantity) {
 		log.debug("장바구니 수량 수정: cartId={}, quantity={}", cartId, quantity);
 
-		if (quantity <= 0) {
-			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, "수량은 1 이상이어야 합니다.");
-		}
+		validateQuantity(quantity);
 
 		int result = cartMapper.updateCartQuantity(cartId, quantity);
 		if (result == 0) {
@@ -271,6 +190,7 @@ public class CartService {
 	 * 장바구니에서 상품 삭제
 	 *
 	 * @param cartId 장바구니 ID
+	 * @throws BusinessException 검증 실패 시
 	 */
 	@Transactional
 	public void removeFromCart(int cartId) {
@@ -300,6 +220,138 @@ public class CartService {
 	// ========== Private Helper Methods ==========
 
 	/**
+	 * 수량 유효성 검증
+	 *
+	 * @param quantity 수량
+	 * @throws BusinessException 수량이 0 이하인 경우
+	 */
+	private void validateQuantity(int quantity) {
+		if (quantity < AppConstants.MIN_ORDER_QUANTITY) {
+			throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE, AppConstants.MSG_INVALID_QUANTITY);
+		}
+	}
+
+	/**
+	 * 상품 존재 여부 및 재고 확인
+	 *
+	 * @param prodNum 상품 번호
+	 * @param quantity 요청 수량
+	 * @return 상품 정보
+	 * @throws BusinessException 상품이 없거나 재고 부족 시
+	 */
+	private ProductDto validateProductAndStock(int prodNum, int quantity) {
+		// 상품 존재 여부
+		ProductDto product = productMapper.getProductByNum(prodNum);
+		if (product == null) {
+			throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "prodNum=" + prodNum);
+		}
+
+		// 재고 확인
+		if (product.getProdStock() < quantity) {
+			throw new BusinessException(
+					ErrorCode.INVALID_INPUT_VALUE,
+					String.format(AppConstants.MSG_INSUFFICIENT_STOCK, quantity, product.getProdStock())
+			);
+		}
+
+		return product;
+	}
+
+	/**
+	 * 기존 장바구니 아이템 수량 증가 처리
+	 *
+	 * @param existingCart 기존 장바구니 아이템
+	 * @param product 상품 정보
+	 * @param additionalQuantity 추가 수량
+	 * @throws BusinessException 재고 부족 시
+	 */
+	private void handleExistingCartItem(CartDto existingCart, ProductDto product, int additionalQuantity) {
+		int newQuantity = existingCart.getCartQuantity() + additionalQuantity;
+
+		// 재고 재확인
+		if (product.getProdStock() < newQuantity) {
+			throw new BusinessException(
+					ErrorCode.INVALID_INPUT_VALUE,
+					String.format("재고 부족: 장바구니 수량=%d, 추가 수량=%d, 재고=%d",
+							existingCart.getCartQuantity(), additionalQuantity, product.getProdStock())
+			);
+		}
+
+		updateCartQuantity(existingCart.getCartId(), newQuantity);
+		log.info("장바구니 수량 증가: cartId={}, {} → {}", existingCart.getCartId(),
+				existingCart.getCartQuantity(), newQuantity);
+	}
+
+	/**
+	 * 기존 장바구니 아이템 수량 증가 + 선물 정보 업데이트
+	 *
+	 * @param existingCart 기존 장바구니 아이템
+	 * @param product 상품 정보
+	 * @param additionalQuantity 추가 수량
+	 * @param giftToMemberId 선물 받는 사람 ID
+	 * @param giftMessage 선물 메시지
+	 * @throws BusinessException 재고 부족 시
+	 */
+	private void handleExistingCartItemAsGift(CartDto existingCart, ProductDto product, int additionalQuantity,
+											   String giftToMemberId, String giftMessage) {
+		int newQuantity = existingCart.getCartQuantity() + additionalQuantity;
+
+		// 재고 재확인
+		if (product.getProdStock() < newQuantity) {
+			throw new BusinessException(
+					ErrorCode.INVALID_INPUT_VALUE,
+					String.format("재고 부족: 장바구니 수량=%d, 추가 수량=%d, 재고=%d",
+							existingCart.getCartQuantity(), additionalQuantity, product.getProdStock())
+			);
+		}
+
+		updateCartQuantity(existingCart.getCartId(), newQuantity);
+		existingCart.setAsGift(giftToMemberId, giftMessage);
+		cartMapper.updateGiftInfo(existingCart);
+
+		log.info("장바구니 수량 증가 + 선물 설정: cartId={}, {} → {}, giftTo={}",
+				existingCart.getCartId(), existingCart.getCartQuantity(), newQuantity, giftToMemberId);
+	}
+
+	/**
+	 * 새로운 장바구니 아이템 생성
+	 *
+	 * @param memberId 회원 ID
+	 * @param prodNum 상품 번호
+	 * @param quantity 수량
+	 * @param isGift 선물 여부
+	 * @param giftToMemberId 선물 받는 사람 ID (선물인 경우)
+	 * @param giftMessage 선물 메시지 (선물인 경우)
+	 * @throws BusinessException DB 삽입 실패 시
+	 */
+	private void createNewCartItem(String memberId, int prodNum, int quantity, boolean isGift,
+								   String giftToMemberId, String giftMessage) {
+		CartDto cartDto = new CartDto();
+		cartDto.setCartId(IdGenerator.generateCartId());
+		cartDto.setCartQuantity(quantity);
+		cartDto.setCartRegDate(DateTimeUtils.getCurrentDateTime());
+		cartDto.setMemberId(memberId);
+		cartDto.setProdNum(prodNum);
+
+		if (isGift) {
+			cartDto.setAsGift(giftToMemberId, giftMessage);
+		} else {
+			cartDto.setAsNormalPurchase();
+		}
+
+		int result = cartMapper.addToCart(cartDto);
+		if (result == 0) {
+			throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR,
+					isGift ? "선물 장바구니 추가 실패" : "장바구니 추가 실패");
+		}
+
+		log.info("{} 장바구니 추가 완료: cartId={}, prodNum={}, quantity={}{}",
+				isGift ? "선물" : "일반",
+				cartDto.getCartId(), prodNum, quantity,
+				isGift ? ", giftTo=" + giftToMemberId : "");
+	}
+
+	/**
 	 * 장바구니 ID로 조회
 	 *
 	 * @param cartId 장바구니 ID
@@ -307,7 +359,8 @@ public class CartService {
 	 * @throws BusinessException 찾을 수 없는 경우
 	 */
 	private CartDto getCartById(int cartId) {
-		List<CartDto> allCarts = cartMapper.showMyCart(null);  // TODO: 개선 필요
+		// TODO: Mapper에 findById 메소드 추가 필요
+		List<CartDto> allCarts = cartMapper.showMyCart(null);
 		return allCarts.stream()
 				.filter(c -> c.getCartId() == cartId)
 				.findFirst()
