@@ -72,9 +72,41 @@ public class MemberService {
 		return memberMapper.getDtoUseHash(memberMatchHash);
 	}
 
+	/**
+	 * @deprecated MatchingService.acceptMatching() 사용 권장
+	 */
+	@Deprecated
 	public void finishMatching(String myHash, String myId, String yourHash, String yourId) {
 		memberMapper.updateMatchId(myId, yourId);
 		memberMapper.updateMatchId(yourId, myId);
+	}
+
+	/**
+	 * 회원 ID 중복 체크
+	 *
+	 * @param memberId 체크할 회원 ID
+	 * @return 중복 여부 (true: 사용 가능, false: 이미 존재)
+	 */
+	public boolean isIdAvailable(String memberId) {
+		MemberDto existing = memberMapper.reloadMemberData(memberId);
+		return existing == null;
+	}
+
+	/**
+	 * 회원 조회 (예외 던지기)
+	 *
+	 * @param memberId 회원 ID
+	 * @return MemberDto
+	 * @throws project.amall.common.exception.BusinessException 회원을 찾을 수 없는 경우
+	 */
+	public MemberDto getMemberOrThrow(String memberId) {
+		MemberDto member = memberMapper.reloadMemberData(memberId);
+		if (member == null) {
+			throw new project.amall.common.exception.BusinessException(
+				project.amall.common.exception.code.ErrorCode.MEMBER_NOT_FOUND
+			);
+		}
+		return member;
 	}
 
 }
