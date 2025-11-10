@@ -67,7 +67,7 @@ public class MatchingService {
         }
 
         // 6. 이미 매칭 요청을 보냈는지 확인
-        AlarmDto existingAlarm = alarmService.CheckSend(myId, yourId);
+        AlarmDto existingAlarm = alarmService.checkSend(myId, yourId);
         if (existingAlarm != null) {
             throw new BusinessException(ErrorCode.MATCHING_REQUEST_ALREADY_SENT);
         }
