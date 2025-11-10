@@ -1,9 +1,10 @@
 package project.amall.member.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import project.amall.common.validation.ValidPhoneNumber;
+import project.amall.common.validation.ValidPostCode;
 
 /**
  * 회원정보 수정 요청 DTO
@@ -24,9 +25,10 @@ public class MemberUpdateRequest {
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     private String memberEmail;
 
-    @Pattern(regexp = "^\\d{10,11}$", message = "전화번호는 10-11자리 숫자여야 합니다.")
+    @ValidPhoneNumber
     private String memberPhone;
 
+    @ValidPostCode
     private String memberPostCode;
     private String memberAddress;
     private String memberDetailAddress;

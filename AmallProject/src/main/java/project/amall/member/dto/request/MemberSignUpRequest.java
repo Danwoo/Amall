@@ -2,6 +2,8 @@ package project.amall.member.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import project.amall.common.validation.ValidPhoneNumber;
+import project.amall.common.validation.ValidPostCode;
 
 /**
  * 회원가입 요청 DTO
@@ -35,7 +37,7 @@ public class MemberSignUpRequest {
     private String memberEmail;
 
     @NotBlank(message = "전화번호는 필수입니다.")
-    @Pattern(regexp = "^\\d{10,11}$", message = "전화번호는 10-11자리 숫자여야 합니다.")
+    @ValidPhoneNumber
     private String memberPhone;
 
     @NotNull(message = "성별은 필수입니다.")
@@ -43,6 +45,7 @@ public class MemberSignUpRequest {
     @Max(value = 1, message = "성별 값이 올바르지 않습니다.")
     private Integer memberSex;
 
+    @ValidPostCode
     private String memberPostCode;
     private String memberAddress;
     private String memberDetailAddress;
