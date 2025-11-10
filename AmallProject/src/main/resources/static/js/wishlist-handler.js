@@ -69,14 +69,14 @@ async function loadMyWishList(memberId) {
 		const itemHtml = `
 			<div class="itemInfor" data-prod-num="${item.prodNum}">
 				<div class="itemImage">
-					<img src="${item.prodImage1 || '/img/default-product.png'}">
+					<img src="${escapeAttribute(item.prodImage1 || '/img/default-product.png')}">
 				</div>
 				<div class="itemExplanation">
-					<h6>${item.sellerId || ''}</h6>
-					<h5>${item.prodName}</h5>
+					<h6>${escapeHtml(item.sellerId || '')}</h6>
+					<h5>${escapeHtml(item.prodName)}</h5>
 					<p>${item.prodPrice ? item.prodPrice.toLocaleString() + '원' : ''}</p>
 					<nav>
-						<a class="like" onclick="removeFromMyWishList('${memberId}', ${item.prodNum})">
+						<a class="like" onclick="removeFromMyWishList('${escapeAttribute(memberId)}', ${item.prodNum})">
 							<img src="/img/imgCommon/Good.png" alt="삭제">
 						</a>
 					</nav>
@@ -121,13 +121,13 @@ async function loadPartnerWishList(memberId) {
 		const itemHtml = `
 			<div class="itemInfor" data-prod-num="${item.prodNum}">
 				<div class="itemImage">
-					<img src="${item.prodImage1 || '/img/default-product.png'}">
+					<img src="${escapeAttribute(item.prodImage1 || '/img/default-product.png')}">
 				</div>
 				<div class="itemExplanation">
-					<h6>${item.sellerId || ''}</h6>
-					<h5>${item.prodName}</h5>
+					<h6>${escapeHtml(item.sellerId || '')}</h6>
+					<h5>${escapeHtml(item.prodName)}</h5>
 					<p>${item.prodPrice ? item.prodPrice.toLocaleString() + '원' : ''}</p>
-					<button class="gift-button" onclick="openGiftModal(${item.prodNum}, '${item.prodName}')">
+					<button class="gift-button" onclick="openGiftModal(${item.prodNum}, '${escapeAttribute(item.prodName)}')">
 						🎁 선물하기
 					</button>
 				</div>

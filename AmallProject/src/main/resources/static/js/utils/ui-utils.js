@@ -5,6 +5,37 @@
  */
 
 /**
+ * HTML 특수문자 이스케이프 (XSS 방지)
+ *
+ * @param {string} str - 이스케이프할 문자열
+ * @returns {string} 이스케이프된 문자열
+ */
+function escapeHtml(str) {
+    if (!str) return '';
+
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+/**
+ * 안전한 HTML 속성 값 생성 (따옴표 이스케이프)
+ *
+ * @param {string} str - 속성 값
+ * @returns {string} 이스케이프된 속성 값
+ */
+function escapeAttribute(str) {
+    if (!str) return '';
+
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+/**
  * Toast 메시지 표시
  *
  * @param {string} message - 표시할 메시지

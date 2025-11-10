@@ -94,7 +94,7 @@ function renderCartItem(cart) {
 		: '';
 
 	const giftInfo = isGift && cart.giftMessage
-		? `<p style="color: #666; font-size: 12px; margin-top: 5px;">메시지: ${cart.giftMessage}</p>`
+		? `<p style="color: #666; font-size: 12px; margin-top: 5px;">메시지: ${escapeHtml(cart.giftMessage)}</p>`
 		: '';
 
 	return `
@@ -103,12 +103,12 @@ function renderCartItem(cart) {
 				<input type="checkbox" class="chk" name="chk" data-cart-id="${cart.cartId}">
 			</td>
 			<td class="bagTd" style="width: 13%;">
-				<img class="bagImgTag" src="${product.prodImage1 || '/img/default-product.png'}" alt="${product.prodName || ''}">
+				<img class="bagImgTag" src="${escapeAttribute(product.prodImage1 || '/img/default-product.png')}" alt="${escapeAttribute(product.prodName || '')}">
 			</td>
 			<td class="bagTd" style="width: 27%;">
 				${giftBadge}
-				<a class="bagATag" href="#">${product.sellerId || ''}</a>
-				<p class="bagPTag">${product.prodName || ''}</p>
+				<a class="bagATag" href="#">${escapeHtml(product.sellerId || '')}</a>
+				<p class="bagPTag">${escapeHtml(product.prodName || '')}</p>
 				<span class="bagSpanTag price">${product.prodPrice ? product.prodPrice.toLocaleString() + '원' : ''}</span>
 				${giftInfo}
 			</td>

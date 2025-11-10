@@ -82,14 +82,14 @@ function renderStoreProductCard(product) {
 
 	return `
 		<div class="itemInfor">
-			<a href="#" onclick="goToProductDetail('${product.prodCode}'); return false;">
+			<a href="#" onclick="goToProductDetail('${escapeAttribute(product.prodCode)}'); return false;">
 				<div class="${currentCategory.toLowerCase()}">
 					<div class="itemImage">
-						<img src="${product.prodImage1 || '/img/default-product.png'}" alt="${product.prodName}">
+						<img src="${escapeAttribute(product.prodImage1 || '/img/default-product.png')}" alt="${escapeAttribute(product.prodName)}">
 					</div>
 					<div class="itemExplanation">
-						<h6>${product.sellerId || ''}</h6>
-						<h5>${product.prodName}</h5>
+						<h6>${escapeHtml(product.sellerId || '')}</h6>
+						<h5>${escapeHtml(product.prodName)}</h5>
 						<p class="product-price">${product.prodPrice ? product.prodPrice.toLocaleString() + '원' : ''}</p>
 						<br>
 						<nav>
