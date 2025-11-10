@@ -38,7 +38,7 @@ public class WishListService {
 	 * @param memberId 회원 ID
 	 * @return 위시리스트 상품 목록 (최대 4개)
 	 */
-	public List<ProductDto> showThisIdWishList(String memberId) {
+	public List<ProductDto> getWishList(String memberId) {
 		log.debug("위시리스트 조회: memberId={}", memberId);
 		return wishListMapper.showThisIdWishList(memberId);
 	}
@@ -50,6 +50,7 @@ public class WishListService {
 	 *
 	 * @param memberId 회원 ID
 	 * @param prodNum 상품 번호
+	 * @throws BusinessException 상품이 없거나 중복 추가인 경우
 	 */
 	@Transactional
 	public void addWishList(String memberId, int prodNum) {
@@ -89,6 +90,7 @@ public class WishListService {
 	 * 위시리스트에서 상품 삭제
 	 *
 	 * @param wishlistId 위시리스트 ID
+	 * @throws BusinessException 위시리스트 항목이 없는 경우
 	 */
 	@Transactional
 	public void removeWishList(int wishlistId) {
@@ -138,15 +140,13 @@ public class WishListService {
 	 *
 	 * @param memberId 내 회원 ID
 	 * @return 상대방의 위시리스트
+	 * @throws BusinessException 회원이 없거나 매칭이 안 된 경우
 	 */
-	public List<ProductDto> showPartnerWishList(String memberId) {
+	public List<ProductDto> getPartnerWishList(String memberId) {
 		log.debug("커플 위시리스트 조회: memberId={}", memberId);
 
-		// (1) 내 정보 조회
-		MemberDto member = memberMapper.reloadMemberData(memberId);
-		if (member == null) {
-			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "memberId=" + memberId);
-		}
+		// (1) 내 정보 조회 및 검증
+		MemberDto member = validateMemberExists(memberId);
 
 		// (2) 매칭된 상대방 ID 확인
 		String partnerMemberId = member.getMemberMatchId();
@@ -158,13 +158,7 @@ public class WishListService {
 		}
 
 		// (3) 상대방 존재 확인
-		MemberDto partnerMember = memberMapper.reloadMemberData(partnerMemberId);
-		if (partnerMember == null) {
-			throw new BusinessException(
-					ErrorCode.MEMBER_NOT_FOUND,
-					"매칭된 상대방을 찾을 수 없습니다: partnerMemberId=" + partnerMemberId
-			);
-		}
+		validateMemberExists(partnerMemberId);
 
 		// (4) 상대방의 위시리스트 조회
 		List<ProductDto> partnerWishList = wishListMapper.showThisIdWishList(partnerMemberId);
@@ -176,6 +170,21 @@ public class WishListService {
 	}
 
 	// ========== Private Helper Methods ==========
+
+	/**
+	 * 회원 존재 여부 확인
+	 *
+	 * @param memberId 회원 ID
+	 * @return 회원 정보
+	 * @throws BusinessException 회원이 없는 경우
+	 */
+	private MemberDto validateMemberExists(String memberId) {
+		MemberDto member = memberMapper.reloadMemberData(memberId);
+		if (member == null) {
+			throw new BusinessException(ErrorCode.MEMBER_NOT_FOUND, "memberId=" + memberId);
+		}
+		return member;
+	}
 
 	// 위시리스트 ID 생성은 IdGenerator로 통합됨
 }

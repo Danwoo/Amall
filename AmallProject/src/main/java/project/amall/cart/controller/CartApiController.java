@@ -49,7 +49,7 @@ public class CartApiController {
 		// 본인 확인
 		SecurityUtils.validateMemberAccess(memberId);
 
-		List<CartDto> cartList = cartService.showMyCart(memberId);
+		List<CartDto> cartList = cartService.getCart(memberId);
 		List<CartResponse> response = cartList.stream()
 				.map(CartResponse::from)
 				.collect(Collectors.toList());
