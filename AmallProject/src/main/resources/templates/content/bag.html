@@ -18,7 +18,10 @@
 
 <!-- inline JS 영역-->
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-<!-- <script th:inline="javascript" type="text/javascript" th:src="@{/js/bag.js}"></script> -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/bag-handler.js}"></script>
+
+<!-- 회원 ID 주입 (JavaScript에서 사용) -->
+<meta name="member-id" th:content="${#authentication.name}" sec:authorize="isAuthenticated()">
 </head>
 
 <body>
