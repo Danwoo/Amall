@@ -383,6 +383,16 @@
 </style>
 
 <!-- inline JS 영역-->
+<!-- UI 유틸리티 (Toast, 로딩 등) -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/ui-utils.js}"></script>
+
+<!-- 공통 유틸리티 (getMemberIdFromPage, formatDate, formatPrice 등) -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/common-utils.js}"></script>
+
+<!-- Order API -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/api/order-api.js}"></script>
+
+<!-- Order History 페이지 핸들러 -->
 <script th:inline="javascript" type="text/javascript" th:src="@{/js/order-history-handler.js}"></script>
 
 <!-- 회원 ID 주입 (JavaScript에서 사용) -->

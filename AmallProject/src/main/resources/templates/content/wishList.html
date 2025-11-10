@@ -17,6 +17,10 @@
 </style>
 
 <!-- inline JS 영역-->
+<!-- 공통 유틸리티 (getMemberIdFromPage, formatDate, formatPrice 등) -->
+<script th:inline="javascript" type="text/javascript" th:src="@{/js/utils/common-utils.js}"></script>
+
+<!-- Wishlist 페이지 핸들러 -->
 <script th:inline="javascript" type="text/javascript" th:src="@{/js/wishlist-handler.js}"></script>
 
 <!-- 회원 ID 주입 (JavaScript에서 사용) -->
